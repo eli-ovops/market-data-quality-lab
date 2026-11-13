@@ -1,0 +1,226 @@
+Lighter (https://lighter.xyz/)
+citeturn1539view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://lighter.xyz","lineno":null}); Total lines: 319
+L0: RESOURCES
+L1: 
+L2: COMMUNITY
+L3: 
+L4: cite0†FAQ L5: 
+L6: cite1†START TRADING†app.lighter.xyz L7: 
+L8: cite2†LIGHTER L9: 
+L10: cite2†LIGHTER L11: 
+L12: # TRADE
+L13: 
+L14: # TRADE
+L15: 
+L16: # CRYPTO
+L17: 
+L18: # WITH ZERO FEES
+L19: 
+L20: # WITH ZERO FEES
+L21: ## A fully verifiable decentralized exchange built with custom ZK infrastructure, inheriting Ethereum security and composability.
+L22: 
+L23: A fully verifiable decentralized exchange built with custom ZK infrastructure, inheriting Ethereum security and composability.
+L24: 
+L25: cite3†EXPLORE FEATURES L26: 
+L27: cite4†EXPLORE FEATURES L28: 
+L29: cite1†START TRADING†app.lighter.xyz L30: Lighter is a zero-knowledge rollup on top of Ethereum optimized for speed, throughput and scale that generates ZK proofs of all operations including order matching and liquidations.
+L31: 
+L32: SCALABLE
+L33: 
+L34: Engineered for scale, processing tens of thousands of orders and cancels per second with millisecond latency.
+L35: 
+L36: EFFICIENT
+L37: Infrastructure for matching orders and proving the correctness of the matching is highly optimized for low costs, allowing zero fees for retail traders and very competitive fees for high frequency traders.
+L38: 
+L39: VERIFIABLE
+L40: 
+L41: Lighter strictly adheres to a publicly predefined set of rules. All operations including matching and liquidations are proven cryptographically and verified publicly on Ethereum.
+L42: 
+L43: SECURE
+L44: Lighter uses Ethereum as the base layer for proofs and system state changes. Users can deposit or withdraw securely through Ethereum, with all proofs verified publicly.
+L45: 
+L46: INCOMING_TX
+L47: 
+L48: TX_QUEUE
+L49: 
+L50: MATCHING ENGINE
+L51: 
+L52: RISK ENGINE
+L53: 
+L54: EXECUTOR
+L55: 
+L56: "
+L57: 
+L58: BATCH PROVER
+L59: 
+L60: ETHEREUM
+L61: 
+L62: cite5†Image: Logo†d1h2wpc6xyxa4i.cloudfront.net L63: 
+L64: Lighter CUSTOM ZK CIRCUIT
+L65: 
+L66: Lighter CUSTOM ZK CIRCUIT
+L67: 
+L68: BACKED BY THE BEST
+L69: 
+L70: cite6†FOUNDERS FUND†foundersfund.com L71: 
+L72: cite7†RIBBIT†www.ribbitcap.com L73: 
+L74: cite8†HAUN VENTURES†www.haun.co L75: 
+L76: cite9†ROBINHOOD†robinhood.com L77: cite10†COINBASE†www.coinbase.com L78: 
+L79: AND OTHER TOP TIER VCS AND ANGEL INVESTORS
+L80: 
+L81: Experience verifiable, onchain trading like never before, with costs and latency at the performance grade of high frequency finance.
+L82: 
+L83: cite1†START TRADING†app.lighter.xyz L84: 
+L85: cite1†START TRADING†app.lighter.xyz L86: # TRADE
+L87: 
+L88: # CRYPTO
+L89: # WITH ZERO FEES
+L90: 
+L91: A fully verifiable decentralized exchange built with custom ZK infrastructure, inheriting Ethereum security and composability.
+L92: 
+L93: cite4†EXPLORE FEATURES L94: 
+L95: cite1†START TRADING†app.lighter.xyz L96: 
+L97: Lighter is a zero-knowledge rollup on top of Ethereum optimized for speed, throughput and scale that generates ZK proofs of all operations including order matching and liquidations.
+L98: Experience verifiable, onchain trading like never before, with costs and latency at the performance grade of high frequency finance.
+L99: 
+L100: cite1†START TRADING†app.lighter.xyz L101: 
+L102: backed
+L103: 
+L104: by the best
+L105: 
+L106: AND OTHER TOP TIER VCS AND ANGEL INVESTORS
+L107: 
+L108: cite6†FOUNDERS FUND†foundersfund.com L109: 
+L110: cite8†HAUN†www.haun.co L111: 
+L112: cite7†RIBBIT†www.ribbitcap.com L113: 
+L114: cite7†RIBBIT†www.ribbitcap.com L115: 
+L116: cite9†ROBINHOOD†robinhood.com L117: 
+L118: cite9†ROBINHOOD†robinhood.com L119: 
+L120: cite10†COINBASE†www.coinbase.com L121: 
+L122: cite10†COINBASE†www.coinbase.com L123: 
+L124: cite11†Image†framerusercontent.com L125: ANNOUNCING: LIGHTER MOBILE APP.
+L126: 
+L127: DOWNLOAD NOW ON IOS OR ANDROID
+L128: 
+L129: cite12†DOCUMENTATION†docs.lighter.xyz L130: 
+L131: cite13†WHITEPAPER†assets.lighter.xyz L132: 
+L133: cite14†AUDITS†docs.lighter.xyz L134: 
+L135: cite0†FAQ L136: 
+L137: cite15†BLOG L138: 
+L139: cite16†STATUS†status.lighter.xyz L140: 
+L141: cite17†TESTNET†testnet.app.lighter.xyz L142: 
+L143: cite18†BRAND KIT L144: 
+L145: cite19†TERMS OF SERVICE L146: 
+L147: cite20†DISCORD†discord.gg L148: 
+L149: cite21†TELEGRAM†t.me L150: 
+L151: cite22†X/TWITTER†x.com L152: 
+L153: cite1†APP.LIGHTER.XYZ†app.lighter.xyz L154: 
+L155: OFFICIAL APP LINKS
+L156: 
+L157: cite23†LIGHTER.EXCHANGE†lighter.exchange L158: 
+L159: WORK WITH US
+L160: 
+L161: cite2†TERMS OF SERVICE L162: cite17†TESTNET†testnet.app.lighter.xyz L163: 
+L164: cite16†STATUS†status.lighter.xyz L165: 
+L166: cite18†BRAND KIT L167: 
+L168: cite12†DOCUMENTATION†docs.lighter.xyz L169: 
+L170: cite13†WHITEPAPER†assets.lighter.xyz L171: 
+L172: cite0†FAQ L173: 
+L174: cite15†BLOG L175: 
+L176: cite14†AUDITS†docs.lighter.xyz L177: 
+L178: cite20†DISCORD†discord.gg L179: 
+L180: cite22†X/TWITTER†x.com L181: 
+L182: cite21†TELEGRAM†t.me L183: 
+L184: cite1†APP.LIGHTER.XYZ†app.lighter.xyz L185: 
+L186: cite23†LIGHTER.EXCHANGE†lighter.exchange L187: 
+L188: cite12†DOCUMENTATION†docs.lighter.xyz L189: 
+L190: cite13†WHITEPAPER†assets.lighter.xyz L191: 
+L192: cite14†AUDITS†docs.lighter.xyz L193: 
+L194: cite0†FAQ L195: 
+L196: cite15†BLOG L197: 
+L198: cite16†STATUS†status.lighter.xyz L199: cite17†TESTNET†testnet.app.lighter.xyz L200: 
+L201: cite18†BRAND KIT L202: 
+L203: cite19†TERMS OF SERVICE L204: 
+L205: cite20†DISCORD†discord.gg L206: 
+L207: cite21†TELEGRAM†t.me L208: 
+L209: cite22†X/TWITTER†x.com L210: 
+L211: cite1†APP.LIGHTER.XYZ†app.lighter.xyz L212: 
+L213: OFFICIAL APP LINKS
+L214: 
+L215: cite23†LIGHTER.EXCHANGE†lighter.exchange L216: 
+L217: cite2†TERMS OF SERVICE L218: 
+L219: cite17†TESTNET†testnet.app.lighter.xyz L220: 
+L221: cite16†STATUS†status.lighter.xyz L222: 
+L223: cite18†BRAND KIT L224: 
+L225: cite12†DOCUMENTATION†docs.lighter.xyz L226: 
+L227: cite13†WHITEPAPER†assets.lighter.xyz L228: 
+L229: cite0†FAQ L230: 
+L231: cite15†BLOG L232: 
+L233: cite14†AUDITS†docs.lighter.xyz L234: 
+L235: cite20†DISCORD†discord.gg L236: cite22†X/TWITTER†x.com L237: 
+L238: cite21†TELEGRAM†t.me L239: 
+L240: cite1†APP.LIGHTER.XYZ†app.lighter.xyz L241: 
+L242: cite23†LIGHTER.EXCHANGE†lighter.exchange L243: 
+L244: WORK WITH US
+L245: 
+L246: WORK WITH US
+L247: 
+L248: ANNOUNCING: LIGHTER MOBILE APP. DOWNLOAD NOW ON IOS OR ANDROID
+L249: 
+L250: cite11†Image†framerusercontent.com L251: 
+L252: cite11†Image†framerusercontent.com L253: 
+L254: cite11†Image†framerusercontent.com L255: 
+L256: ANNOUNCING: LIGHTER MOBILE APP.
+L257: 
+L258: DOWNLOAD NOW ON IOS OR ANDROID
+L259: 
+L260: cite2†LIGHTER L261: Transactions flow through custom circuits that verify signatures and balances instantly. Processes thousands of operations per second while generating cryptographic proofs, keeping your trading data private.
+L262: 
+L263: Engineered for scale, processing tens of thousands of orders and cancels per second with millisecond latency.
+L264: 
+L265: INCOMING_TX
+L266: 
+L267: TX_QUEUE
+L268: 
+L269: MATCHING ENGINE
+L270: 
+L271: RISK ENGINE
+L272: 
+L273: EXECUTOR
+L274: Trades match by price-time priority with cryptographic proofs, eliminating censorship or favoritism. A risk engine monitors margin and auto-liquidates risky accounts, backed by insurance funds. The executor batches trades and liquidations, updates balances, and produces verifiable proofs. The result: exchange-level speed with full on-chain transparency—thousands of fair operations per second.
+L275: Infrastructure for matching orders and proving the correctness of the matching is highly optimized for low costs, allowing zero fees for retail traders and very competitive fees for high frequency traders.
+L276: 
+L277: Bundles multiple transactions into one compact proof, verifying hundreds of trades at once. Makes everything faster and cheaper on Ethereum while proving every trade was legitimate.
+L278: Lighter strictly adheres to a publicly predefined set of rules. All operations including matching and liquidations are proven cryptographically and verified publicly on Ethereum.
+L279: 
+L280: "
+L281: 
+L282: BATCH_PROVER
+L283: 
+L284: BATCH PROVER
+L285: 
+L286: ETHEREUM
+L287: 
+L288: cite5†Image: Logo†d1h2wpc6xyxa4i.cloudfront.net L289: 
+L290: Final settlement on Ethereum with full blockchain security. Your funds stay in your control with guaranteed withdrawal rights even if zkLighter goes offline - exchange speed with self-custody safety.Retry
+L291: Lighter uses Ethereum as the base layer for proofs and system state changes. Users can deposit or withdraw securely through Ethereum, with all proofs verified publicly.
+L292: 
+L293: Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores.
+L294: 
+L295: Lighter Custom zk Rollup
+L296: 
+L297: Lighter Custom zk Rollup
+L298: Lighter is a zero-knowledge rollup on top of Ethereum optimized for speed, throughput and scale that generates ZK proofs of all operations including order matching and liquidations.
+L299: 
+L300: backed by the best
+L301: 
+L302: cite6†FOUNDERS FUND†foundersfund.com L303: 
+L304: cite7†RIBBIT†www.ribbitcap.com L305: 
+L306: cite7†RIBBIT†www.ribbitcap.com L307: 
+L308: cite8†HAUN VENTURES†www.haun.co L309: 
+L310: cite9†ROBINHOOD†robinhood.com L311: 
+L312: cite9†ROBINHOOD†robinhood.com L313: 
+L314: cite10†COINBASE†www.coinbase.com L315: 
+L316: cite10†COINBASE†www.coinbase.com L317: 
+L318: AND OTHER TOP TIER VCS AND ANGEL INVESTORS
+

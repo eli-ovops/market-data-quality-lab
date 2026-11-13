@@ -1,0 +1,183 @@
+
+=== CELL 0 markdown ===
+# Data Preparation in q/kdb+
+
+Use q to do the heavy work, handle large dataset manipulation. 
+
+This notebook does 3 things.
+1. load data
+2. reshape data for visualization
+3. feature engineering
+=== CELL 1 markdown ===
+# Read Data into Table
+=== CELL 2 markdown ===
+### Preview File as Text
+=== CELL 3 code ===
+fname:"/home/shiyu/Desktop/XTX_challenge/data/data-training.csv"
+=== CELL 4 code ===
+10#system "cat ",fname
+=== CELL 5 markdown ===
+### Understand the Fields
+=== CELL 6 code ===
+colnames: "," vs first system "head ",fname
+
+show "column number: ", string count colnames
+show ([]colnames:colnames)
+=== CELL 7 code ===
+bid_rates_col:"bidRate",/:string til 14
+bid_sizes_col:"bidSize",/:string til 14
+ask_rates_col:"askRate",/:string til 14
+ask_sizes_col:"askSize",/:string til 14
+=== CELL 8 markdown ===
+### Load Table
+=== CELL 9 code ===
+t:(61#"F";enlist ",") 0: read0 hsym `$fname
+=== CELL 10 markdown ===
+### Add Time as Key
+The data doesn't provide timestamp. We only rows are sequential ticks. Simply use row number as time to keep the sequence.
+=== CELL 11 code ===
+t: update time:i from t
+=== CELL 12 markdown ===
+[Read Data into Table] ends
+=== CELL 13 markdown ===
+# Reshape Data for Visualization Purpose
+
+Let each row represents one level at a time, i.e. keyed by [level;time]. For visualizing orders distirbution over time.
+=== CELL 14 code ===
+/unstack data of one price level [x]
+f_unstack:{?[t;();0b;`time`level`askRate`askSize`bidRate`bidSize!
+                     `time,x,(`$"askRate",string x),(`$"askSize",string x),
+                             (`$"bidRate",string x),(`$"bidSize",string x)]}
+=== CELL 15 code ===
+t_unstack: raze f_unstack each til 14
+=== CELL 16 markdown ===
+### Check Resulted Table
+=== CELL 17 code ===
+/check the first few lines...
+10#t_unstack
+=== CELL 18 code ===
+/randomly pick time points, check if bidRate for 14 levels match raw data
+f_check:{14=sum value(select ifmatch:bidRate from t_unstack where time=x)
+            =flip ?[t;enlist (=;`time;x);0b;(`$bid_rates_col)!`$bid_rates_col]}
+
+rdnlist:5?count t
+rdnlist!f_check peach rdnlist
+=== CELL 19 markdown ===
+### Dump Data into Splayed Table and .csv
+
+The splayed table is for future loading in q. .csv is for loading in python. Right, just too rich in local storage.
+=== CELL 20 code ===
+/load function from lib
+\l ../data/lib.q
+system "cat ../data/lib.q"
+=== CELL 21 code ===
+/save as splayed table
+`:/home/shiyu/Desktop/XTX_challenge/data/data_unstack_splayed/ set t
+/ save as .csv
+dumptable[t_unstack;"/home/shiyu/Desktop/XTX_challenge/data/data_unstack.csv";","]
+=== CELL 22 markdown ===
+[Reshape Data for Visualization Purpose] ends
+=== CELL 23 markdown ===
+# Feature Engineering
+=== CELL 24 code ===
+/fill null
+t:0^t
+=== CELL 25 code ===
+/utilities
+/diff function
+f_diff:{[col;lag]l:count t;(lag#0f),(((lag-l)#t[col])-(l-lag)#t[col])} /return list
+f_diff_t:{(enlist`$x,"_diff",string y)!enlist f_diff[`$x;y]} /return table
+=== CELL 26 markdown ===
+### Mid Price, Spread, Book Price
+... and its Moving Average, Moving Volatility and Change
+=== CELL 27 code ===
+/mid price = (askRate0+bidRate0)/2
+t:update midprice:(askRate0+bidRate0)%2 from t
+
+/spread = askRate0 - bidRate0
+t:![t;();0b;(enlist `spread)!enlist (-;`askRate0;`bidRate0)]
+
+/book price = (askRate_i*bidSize_i+bidRate_i*askSize_i)/(askSize_i+bidSize_i)
+f_bp:{[aR;aS;bR;bS](aR*bS+bR*aS)%(aS+bS)}
+t:![t;();0b;raze{(enlist `$"bookprice",string x)!
+                  enlist(f_bp;
+                         `$"askRate",string x;
+                         `$"askSize",string x;
+                         `$"bidRate",string x;
+                         `$"bidSize",string x)} peach til 3]
+=== CELL 28 code ===
+/moving average of prices/spread
+
+/col: column name
+/l: window length
+f_ma_t:{[col;l](enlist `$(string col),"_ma",string l)!enlist (l msum t col)%l }
+t:![t;();0b;raze raze (f_ma_t each (`midprice`spread`bookprice0)) peach (5 15 45 87 180 360)]
+=== CELL 29 code ===
+/moving volatility of prices/spread
+f_std_t:{[col;l](enlist `$(string col),"_std",string l)!enlist (l msum t col)%l }
+t:![t;();0b;raze raze (f_std_t each (`midprice`spread`bookprice0)) peach (5 15 45 87 180 360)]
+=== CELL 30 code ===
+/change of prices/spread
+t:![t;();0b;raze raze (f_diff_t each string `midprice`spread`bookprice0) peach (5 15 45 87 180 360)]
+=== CELL 31 markdown ===
+### Volume, Level
+... and its Change
+=== CELL 32 code ===
+/level change
+t:![t;();0b;raze raze (f_diff_t each (ask_rates_col,bid_rates_col)) peach (5 15 45 87 180 360)]
+
+/volume = sum of ask/bid size for level 0-14
+t:![t;();0b;(enlist `askSize_ttl)!enlist sum?[t;();();(`$ask_sizes_col)!`$ask_sizes_col]]
+t:![t;();0b;(enlist `bidSize_ttl)!enlist sum?[t;();();(`$bid_sizes_col)!`$bid_sizes_col]]
+
+/volume change
+t:![t;();0b;raze raze (f_diff_t each (ask_sizes_col,bid_sizes_col)) peach (5 15 45 87 180 360)]
+=== CELL 33 markdown ===
+### Volume Imbalance
+... and its Change
+=== CELL 34 code ===
+/volume imbalance for level i = bidSize_i/(bidSize_i+askSize_i)
+f_vol_imb:{[aS;bS]bS%(aS+bS)}
+t:![t;();0b;raze{(enlist `$"vol_imb",string x)!
+                  enlist (f_vol_imb;
+                          `$"askSize",string x;
+                          `$"bidSize",string x)} peach til 15]
+=== CELL 35 code ===
+/aggregated volume imbalance for level i-j
+
+/tt: table
+/i: start level
+/j: end level
+/d: direction {ask,bid}
+f_vol_agg:{[tt;i;j;d]col:d,/:"Size",/:string(i-j-1)#til j+1; /columns to aggregate
+            sum?[tt;();();(`$col)!`$col]} /return aggregated column
+f_vol_imb_agg:{[tt;i;j]f_vol_imb[f_vol_agg[tt;i;j;"ask"];f_vol_agg[tt;i;j;"bid"]]}
+
+/level 0-4
+t:![t;();0b;(enlist `$"vol_imb_agg","0_4")!enlist f_vol_imb_agg[t;0;4]]
+/level 5-14
+t:![t;();0b;(enlist `$"vol_imb_agg","5_14")!enlist f_vol_imb_agg[t;5;14]]
+=== CELL 36 code ===
+/aggregated volume imbalance change
+t:![t;();0b;raze raze (f_diff_t each string `vol_imb_agg0_4`vol_imb_agg5_14) peach (5 15 45 87 180 360)]
+=== CELL 37 markdown ===
+### Level Sparsity
+=== CELL 38 code ===
+/level sparsity = askRate_i - askRate_0
+/d: direction {ask/bid}
+/l: level 1-14
+f_spar:{[d;l]col:d,"Rate";t[`$col,string l]-t[`$col,string 0]}
+f_spar_t:{[d;l](enlist`$ raze d,"Rate",(string l),"_spa")!enlist f_spar[d;l]}
+
+t:![t;();0b;raze raze (f_spar_t each ("ask";"bid")) peach (1,2,3,7,14)]
+
+/aggregated clipped top 3 level sparsity
+bid_diff: sum 0|2.5&-[t `$"bidRate",/:string til 3;t `$"bidRate",/:string -3#til 4]-0.5
+ask_diff: sum 0|2.5&-[t `$"askRate",/:string -3#til 4;t `$"askRate",/:string til 3]-0.5
+t:![t;();0b;(enlist `bard)!enlist (bid_diff+ask_diff)]
+=== CELL 39 markdown ===
+### Dump Table of Features into Splayed Table
+=== CELL 40 code ===
+`:/home/shiyu/Desktop/XTX_challenge/data/data_features_splayed/ set t
+=== CELL 41 markdown ===
+[Feature Engineering] ends

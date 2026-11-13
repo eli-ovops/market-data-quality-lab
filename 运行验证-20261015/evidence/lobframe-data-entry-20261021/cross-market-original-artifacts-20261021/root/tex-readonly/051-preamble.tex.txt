@@ -1,0 +1,110 @@
+
+% \usepackage[utf8]{inputenc}
+
+
+\usepackage{arxiv}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+% \usepackage{hyperref}       % hyperlinks
+%\usepackage{blindtext}
+%\hypersetup{
+  %   colorlinks=red,
+  %  linkcolor=blue,
+  %  filecolor=magenta,      
+  %  urlcolor=cyan,
+%}
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+\usepackage{graphicx}
+% \usepackage{unicode-math}
+\usepackage{amsmath}
+\usepackage{bbm}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{float}
+\usepackage{epstopdf}
+
+
+
+
+\usepackage{amsthm}
+
+\usepackage[english]{babel}
+\newtheorem{theorem}{Theorem}
+% \theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+
+\usepackage[colorlinks=true,linkcolor=blue,filecolor=green,citecolor=blue]{hyperref}
+
+% \usepackage{setspace} 
+% \usepackage[titles]{tocloft}
+% \setlength{\cftbeforechapskip}{3pt}
+
+%\usepackage{tocbasic}
+%\DeclareTOCStyleEntry[
+%  beforeskip=.2em plus 1pt,% default is 1em plus 1pt
+%  pagenumberformat=\textbf
+%]{tocline}{chapter}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage{titletoc}
+    \titlecontents{chapter}
+    [0em] %
+    {\medskip\bfseries}
+    {\thecontentslabel\quad}%numbered chapters
+    {}%numberless chapter
+    {\hfill\contentspage}
+
+    \titlecontents{section}[1.72em]{\smallskip}%
+    {\thecontentslabel.\enspace}%numbered sections
+    {}%numberless section
+    {\titlerule*[1.2pc]{.}\contentspage}%
+    
+
+\usepackage[dvipsnames]{xcolor} 
+
+%% In the below, create a macro for each one of you
+% (just copy paste the two lines below, and replace every occurence of MC with you initials, update your name and choose your favorite colour)
+\newcounter{noteMCctr} \setcounter{noteMCctr}{1}
+\newcommand{\MC}[1]{\textbf{\textcolor{blue}{{{Mihai: \#\arabic{noteMCctr}: }}#1}} \addtocounter{noteMCctr}{1}}
+
+
+\newcommand{\mc}[1]{\textcolor{blue}{#1}} 
+
+
+    
+\newcounter{noteZZctr} \setcounter{noteZZctr}{1}
+\newcommand{\AS}[1]{\textbf{\textcolor{red}{{{Alex: \#\arabic{noteZZctr}: }}#1}} \addtocounter{noteZZctr}{1}}
+
+\newcommand{\as}[1]{\textcolor{red}{#1}} 
+
+
+\newcounter{noteXXctr} \setcounter{noteXXctr}{1}
+\newcommand{\JA}[1]{\textbf{\textcolor{BurntOrange}{{{Jakob: \#\arabic{noteXXctr}: }}#1}} \addtocounter{noteXXctr}{1}}
+
+
+% \newcommand{\as}[1]{\textcolor{BurntOrange}{#1}} 
+
+
+\newcommand{\bb}{\hspace{-1mm} $\bullet$ }
+% \usepackage[left=2 cm,right=2 cm,top=1.7 cm,bottom=1.7 cm,headsep=0.6 cm,footnotesep=0.6cm]{geometry}
+    
+
+
+\usepackage[%
+    font={small,sf},
+    labelfont=bf,
+    format=hang,    
+    format=plain,
+    margin=0pt,
+    width=0.8\textwidth,
+]{caption}
+% \usepackage{subfigure}    
+
+\usepackage[list=true]{subcaption}

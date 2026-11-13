@@ -1,0 +1,313 @@
+ (https://docs.tardis.dev/faq/general.md)
+citeturn1547view0 [wordlim: 200] Crawled: today; Content type: text/plain; Source: open({"ref_id":"https://docs.tardis.dev/faq/general.md#what-is-your-infrastructure-setup","lineno":null}); Total lines: 310
+L0: > For the complete documentation index, see [llms.txt](https://docs.tardis.dev/llms.txt). Markdown versions of documentation pages are available by appending `.md` to page URLs; this page is available as [Markdown](https://docs.tardis.dev/faq/general.md).
+L1: 
+L2: # General
+L3: 
+L4: Common questions about exchanges, API access and infrastructure
+L5: 
+L6: ## About Tardis.dev
+L7: ### What is Tardis.dev and what is your unique value proposition?
+L8: 
+L9: Tardis.dev provides tick-level historical and real-time cryptocurrency market data from 50+ exchanges and offers:
+L10: * access to [high frequency historical data](/faq/data.md#what-does-high-frequency-historical-data-mean), including tick-level order book updates and trades for [derivatives and top spot cryptocurrency exchanges](#which-exchanges-instruments-and-currency-pairs-are-supported)
+L11: * [non-standard data types](/faq/data.md#what-data-types-do-you-support): historical funding, open interest, indexes, liquidations and more
+L12: * access via [API](/api/quickstart.md) and [downloadable CSV files](/downloadable-csv-files/overview.md)
+L13: * data [sourced from real-time WebSocket market data feeds](/faq/data.md#why-data-source-matters-websocket-feeds-vs-rest-endpoints), with documented [collection details](/historical-data-details.md#market-data-collection-overview)
+L14: * [exchange-native](/faq/data.md#what-is-a-difference-between-exchange-native-and-normalized-data-format) and [normalized data format](/faq/data.md#what-is-a-difference-between-exchange-native-and-normalized-data-format) support
+L15: * [time-machine market replay](#how-does-time-machine-market-replay-work) for reconstructing order book state at historical points in time
+L16: * [always available market data backup](#what-is-your-infrastructure-setup)
+L17: * [subscription types](/faq/billing-and-subscriptions.md#what-are-the-differences-between-subscription-types) for solo traders, small prop shops, businesses and academic researchers
+L18: * [consolidated real-time market data streaming](#do-you-support-consolidated-real-time-market-data-streaming) support via Tardis.dev open source libraries that connect directly to exchanges' public WebSocket APIs (no API key required)
+L19: **Data use cases**
+L20: 
+L21: * market microstructure and order book dynamics research
+L22: * trading execution optimization
+L23: * tick-level granularity market simulation
+L24: * liquidity and lead-lag analysis
+L25: * backtesting and optimization of trading strategies
+L26: * full historical order book reconstruction at any given point in time
+L27: * alpha generation
+L28: * designing quantitative models
+L29: * academic research
+L30: * data visualizations
+L31: ### Why would I use your services if I can collect data by myself?
+L32: 
+L33: You can collect exchange market data directly, but doing it reliably is time-consuming and resource-intensive. It requires collection infrastructure, storage, distribution, monitoring, exchange API maintenance, new exchange integrations, and ongoing handling of connection drops, rate limits, latency spikes, and upstream API changes. Supported exchanges publish around 1 TB of new data per day.
+L34: We maintain that infrastructure so you can focus on trading and research instead of building an in-house data collection and distribution system. See our [data types](/faq/data.md#what-data-types-do-you-support), [data sourcing approach](/faq/data.md#why-data-source-matters-websocket-feeds-vs-rest-endpoints), and [subscription types](/faq/billing-and-subscriptions.md#what-are-the-differences-between-subscription-types) for details.
+L35: ### Which exchanges, instruments and currency pairs are supported?
+L36: 
+L37: Over 50 000 distinct instruments & currency pairs across leading derivatives and spot cryptocurrency exchanges are supported. We collect and provide data for all instruments & currency pairs available on a given exchange, with some exceptions for spot exchanges where we collect high-cap currency pairs only (due to exchange API limitations).
+L38: {% hint style="info" %}
+L39: See [historical data details](/historical-data-details.md#per-exchange-historical-data-details) for each supported exchange.
+L40: {% endhint %}
+L41: * Binance
+L42:   * [Binance USDS-M Futures](/historical-data-details/binance-futures.md)
+L43:   * [Binance COIN Futures](/historical-data-details/binance-delivery.md)
+L44:   * [Binance European Options](/historical-data-details/binance-european-options.md)
+L45:   * [Binance Spot](/historical-data-details/binance.md)
+L46:   * [Binance US](/historical-data-details/binance-us.md)
+L47: * OKX
+L48:   * [OKX Futures](/historical-data-details/okex-futures.md)
+L49:   * [OKX Swap](/historical-data-details/okex-swap.md)
+L50:   * [OKX Options](/historical-data-details/okex-options.md)
+L51:   * [OKX Spot](/historical-data-details/okex.md)
+L52:   * [OKX Nitro Spreads](/historical-data-details/okex-spreads.md)
+L53: * Coinbase
+L54:   * [Coinbase Exchange](/historical-data-details/coinbase.md)
+L55:   * [Coinbase Derivatives](/historical-data-details/coinbase-derivatives.md)
+L56: * [Deribit](/historical-data-details/deribit.md)
+L57: * Bybit
+L58:   * [Bybit Derivatives](/historical-data-details/bybit.md)
+L59:   * [Bybit Spot](/historical-data-details/bybit-spot.md)
+L60:   * [Bybit Options](/historical-data-details/bybit-options.md)
+L61:   * [Bybit Spread](/historical-data-details/bybit-spread.md)
+L62: * [Kraken Futures](/historical-data-details/cryptofacilities.md)
+L63: * [Kraken](/historical-data-details/kraken.md)
+L64: * Bitfinex
+L65:   * [Bitfinex Derivatives](/historical-data-details/bitfinex-derivatives.md)
+L66:   * [Bitfinex](/historical-data-details/bitfinex.md)
+L67: * KuCoin
+L68:   * [KuCoin Futures](/historical-data-details/kucoin-futures.md)
+L69:   * [KuCoin Spot](/historical-data-details/kucoin.md)
+L70: * [Aster Futures](/historical-data-details/aster-futures.md)
+L71: * [Aster Spot](/historical-data-details/aster.md)
+L72: * [MEXC Spot](/historical-data-details/mexc.md)
+L73: * [MEXC Futures](/historical-data-details/mexc-futures.md)
+L74: * [Crypto.com](/historical-data-details/crypto-com.md)
+L75: * [Bitstamp](/historical-data-details/bitstamp.md)
+L76: * [Bitvavo](/historical-data-details/bitvavo.md)
+L77: * Bitget
+L78:   * [Bitget Futures](/historical-data-details/bitget-futures.md)
+L79:   * [Bitget Spot](/historical-data-details/bitget.md)
+L80: * Gate.io
+L81:   * [Gate.io Futures](/historical-data-details/gate-io-futures.md)
+L82:   * [Gate.io](/historical-data-details/gate-io.md)
+L83: * HTX
+L84:   * [HTX Coin-M Futures](/historical-data-details/huobi-dm.md)
+L85:   * [HTX Coin-M Perpetual](/historical-data-details/huobi-dm-swap.md)
+L86:   * [HTX USDT-M Contracts](/historical-data-details/huobi-dm-linear-swap.md)
+L87:   * [HTX Spot](/historical-data-details/huobi.md)
+L88: * [Gemini](/historical-data-details/gemini.md)
+L89: * [WOO X](/historical-data-details/woo-x.md)
+L90: * [Upbit](/historical-data-details/upbit.md)
+L91: * [Bithumb](/historical-data-details/bithumb.md)
+L92: * [Phemex](/historical-data-details/phemex.md)
+L93: * [Delta Exchange](/historical-data-details/delta.md)
+L94: * [Blockchain.com](/historical-data-details/blockchain-com.md)
+L95: * [Bitnomial](/historical-data-details/bitnomial.md)
+L96: * [bitFlyer](/historical-data-details/bitflyer.md)
+L97: * [HitBTC](/historical-data-details/hitbtc.md)
+L98: * [Poloniex](/historical-data-details/poloniex.md)
+L99: * [Hyperliquid](/historical-data-details/hyperliquid.md)
+L100: * [Lighter](/historical-data-details/lighter.md)
+L101: * [Lighter RH](/historical-data-details/lighter-rh.md)
+L102: * [Polymarket](/historical-data-details/polymarket.md)
+L103: * [Bullish](/historical-data-details/bullish.md)
+L104: * [dYdX v4](/historical-data-details/dydx-v4.md)
+L105: * Delisted exchanges
+L106:   * [Coinbase International](/historical-data-details/coinbase-international.md)
+L107:   * [BitMEX](/historical-data-details/bitmex.md)
+L108:   * [FTX](/historical-data-details/ftx.md)
+L109:   * [FTX US](/historical-data-details/ftx-us.md)
+L110:   * [OKCoin](/historical-data-details/okcoin.md)
+L111:   * [AscendEX (BitMax)](/historical-data-details/ascendex.md)
+L112:   * [CoinFLEX](/historical-data-details/coinflex.md)
+L113:   * [Binance Jersey](/historical-data-details/binance-jersey.md)
+L114:   * [Binance DEX](/historical-data-details/binance-dex.md)
+L115:   * [HTX Options](/historical-data-details/huobi-dm-options.md)
+L116:   * [dYdX](/historical-data-details/dydx.md)
+L117:   * [Serum DEX](/historical-data-details/serum.md)
+L118:   * [Mango Markets DEX](/historical-data-details/mango.md)
+L119:   * [Star Atlas DEX](/historical-data-details/star-atlas.md)
+L120: ### How far back is historical data available?
+L121: 
+L122: The earliest data is from **2019-03-30**. The table below shows the dates for each exchange.
+L123: | **exchange**                                                                     | **available since** | **available until** |
+L124: | -------------------------------------------------------------------------------- | ------------------- | ------------------- |
+L125: | [Binance USDS-M Futures](/historical-data-details/binance-futures.md)            | 2019-11-17          |                     |
+L126: | [Binance COIN Futures](/historical-data-details/binance-delivery.md)             | 2020-06-16          |                     |
+L127: | [Binance European Options](/historical-data-details/binance-european-options.md) | 2023-06-15          |                     |
+L128: | [Binance Spot](/historical-data-details/binance.md)                              | 2019-03-30          |                     |
+L129: | [Binance US](/historical-data-details/binance-us.md)                             | 2019-09-25          |                     |
+L130: | [OKX Futures](/historical-data-details/okex-futures.md)                          | 2019-03-30          |                     |
+L131: | [OKX Swap](/historical-data-details/okex-swap.md)                                | 2019-03-30          |                     |
+L132: | [OKX Options](/historical-data-details/okex-options.md)                          | 2020-02-01          |                     |
+L133: | [OKX Spot](/historical-data-details/okex.md)                                     | 2019-03-30          |                     |
+L134: | [OKX Nitro Spreads](/historical-data-details/okex-spreads.md)                    | 2023-12-22          |                     |
+L135: | [Coinbase Exchange](/historical-data-details/coinbase.md)                        | 2019-03-30          |                     |
+L136: | [Coinbase Derivatives](/historical-data-details/coinbase-derivatives.md)         | 2026-10-14          |                     |
+L137: | [Deribit](/historical-data-details/deribit.md)                                   | 2019-03-30          |                     |
+L138: | [Bybit Derivatives](/historical-data-details/bybit.md)                           | 2019-11-07          |                     |
+L139: | [Bybit Spot](/historical-data-details/bybit-spot.md)                             | 2021-12-04          |                     |
+L140: | [Bybit Options](/historical-data-details/bybit-options.md)                       | 2023-04-05          |                     |
+L141: | [Bybit Spread](/historical-data-details/bybit-spread.md)                         | 2026-10-07          |                     |
+L142: | [Kraken Futures](/historical-data-details/cryptofacilities.md)                   | 2019-03-30          |                     |
+L143: | [Kraken](/historical-data-details/kraken.md)                                     | 2019-06-04          |                     |
+L144: | [Bitfinex Derivatives](/historical-data-details/bitfinex-derivatives.md)         | 2019-09-14          |                     |
+L145: | [Bitfinex](/historical-data-details/bitfinex.md)                                 | 2019-05-23          |                     |
+L146: | [KuCoin Futures](/historical-data-details/kucoin-futures.md)                     | 2024-01-25          |                     |
+L147: | [KuCoin Spot](/historical-data-details/kucoin.md)                                | 2022-08-16          |                     |
+L148: | [Aster Futures](/historical-data-details/aster-futures.md)                       | 2026-08-23          |                     |
+L149: | [Aster Spot](/historical-data-details/aster.md)                                  | 2026-08-23          |                     |
+L150: | [MEXC Spot](/historical-data-details/mexc.md)                                    | 2026-06-25          |                     |
+L151: | [MEXC Futures](/historical-data-details/mexc-futures.md)                         | 2026-06-25          |                     |
+L152: | [Crypto.com](/historical-data-details/crypto-com.md)                             | 2022-06-01          |                     |
+L153: | [Bitstamp](/historical-data-details/bitstamp.md)                                 | 2019-03-30          |                     |
+L154: | [Bitvavo](/historical-data-details/bitvavo.md)                                   | 2026-09-23          |                     |
+L155: | [Bitget Futures](/historical-data-details/bitget-futures.md)                     | 2024-11-08          |                     |
+L156: | [Bitget Spot](/historical-data-details/bitget.md)                                | 2024-11-08          |                     |
+L157: | [Gate.io Futures](/historical-data-details/gate-io-futures.md)                   | 2020-07-01          |                     |
+L158: | [Gate.io](/historical-data-details/gate-io.md)                                   | 2020-07-01          |                     |
+L159: | [HTX Coin-M Futures](/historical-data-details/huobi-dm.md)                       | 2019-11-19          |                     |
+L160: | [HTX Coin-M Perpetual](/historical-data-details/huobi-dm-swap.md)                | 2020-03-28          |                     |
+L161: | [HTX USDT-M Contracts](/historical-data-details/huobi-dm-linear-swap.md)         | 2020-10-30          |                     |
+L162: | [HTX Spot](/historical-data-details/huobi.md)                                    | 2019-11-19          |                     |
+L163: | [Gemini](/historical-data-details/gemini.md)                                     | 2019-08-30          |                     |
+L164: | [WOO X](/historical-data-details/woo-x.md)                                       | 2023-01-20          |                     |
+L165: | [Upbit](/historical-data-details/upbit.md)                                       | 2021-03-03          |                     |
+L166: | [Bithumb](/historical-data-details/bithumb.md)                                   | 2026-09-23          |                     |
+L167: | [Phemex](/historical-data-details/phemex.md)                                     | 2020-03-17          |                     |
+L168: | [Delta Exchange](/historical-data-details/delta.md)                              | 2020-03-30          |                     |
+L169: | [Blockchain.com](/historical-data-details/blockchain-com.md)                     | 2023-02-23          |                     |
+L170: | [Bitnomial](/historical-data-details/bitnomial.md)                               | 2023-01-13          |                     |
+L171: | [bitFlyer](/historical-data-details/bitflyer.md)                                 | 2019-08-30          |                     |
+L172: | [HitBTC](/historical-data-details/hitbtc.md)                                     | 2019-11-19          |                     |
+L173: | [Poloniex](/historical-data-details/poloniex.md)                                 | 2020-07-01          |                     |
+L174: | [Hyperliquid](/historical-data-details/hyperliquid.md)                           | 2024-10-29          |                     |
+L175: | [Lighter](/historical-data-details/lighter.md)                                   | 2026-04-17          |                     |
+L176: | [Lighter RH](/historical-data-details/lighter-rh.md)                             | 2026-09-23          |                     |
+L177: | [Polymarket](/historical-data-details/polymarket.md)                             | 2026-05-25          |                     |
+L178: | [Bullish](/historical-data-details/bullish.md)                                   | 2026-04-29          |                     |
+L179: | [dYdX v4](/historical-data-details/dydx-v4.md)                                   | 2024-08-23          |                     |
+L180: | [Coinbase International](/historical-data-details/coinbase-international.md)     | 2024-10-31          | 2026-10-01          |
+L181: | [BitMEX](/historical-data-details/bitmex.md)                                     | 2019-03-30          | 2026-09-22          |
+L182: | [FTX](/historical-data-details/ftx.md)                                           | 2019-08-01          | 2022-11-13          |
+L183: | [FTX US](/historical-data-details/ftx-us.md)                                     | 2020-05-22          | 2022-11-13          |
+L184: | [OKCoin](/historical-data-details/okcoin.md)                                     | 2019-11-19          | 2025-10-01          |
+L185: | [AscendEX (BitMax)](/historical-data-details/ascendex.md)                        | 2021-03-28          | 2026-07-07          |
+L186: | [CoinFLEX](/historical-data-details/coinflex.md)                                 | 2020-07-14          | 2023-04-07          |
+L187: | [Binance Jersey](/historical-data-details/binance-jersey.md)                     | 2019-10-30          | 2020-11-10          |
+L188: | [Binance DEX](/historical-data-details/binance-dex.md)                           | 2019-06-04          | 2022-10-04          |
+L189: | [HTX Options](/historical-data-details/huobi-dm-options.md)                      | 2021-02-01          | 2021-06-26          |
+L190: | [dYdX](/historical-data-details/dydx.md)                                         | 2021-04-06          | 2024-10-30          |
+L191: | [Serum DEX](/historical-data-details/serum.md)                                   | 2021-06-23          | 2022-11-13          |
+L192: | [Mango Markets DEX](/historical-data-details/mango.md)                           | 2022-01-19          | 2022-10-14          |
+L193: | [Star Atlas DEX](/historical-data-details/star-atlas.md)                         | 2021-10-09          | 2022-09-05          |
+L194: ### Do you provide historical market data in CSV flat files?
+L195: 
+L196: Yes, see [downloadable CSV files documentation](/downloadable-csv-files/overview.md) for more details.
+L197: 
+L198: ## Using the data
+L199: ### What can I use the data for?
+L200: 
+L201: For your own internal business, research, educational or personal use, such as backtesting, strategy development, trading and risk management, including work for your clients and task-specific quantitative models you build for that work. You can't redistribute or resell the data, or use it to provide a product or service that gives others access to it, such as a data feed, an API or a backtesting platform.
+L202: You can share charts, statistics, research reports and papers made from the data, and aggregated results such as OHLCV candles of 10 minutes or longer, when the raw data can't be reconstructed from them; this doesn't apply to Coinbase data. You can store and process the data with cloud and IT providers that keep it confidential and don't use it for their own purposes.
+L203: ### Can I keep using the data after my subscription ends?
+L204: 
+L205: Yes. Data you downloaded while you had access, including trial and free data, stays licensed to you after your subscription ends, under the same licence restrictions.
+L206: 
+L207: ## Getting the data
+L208: ### How can I download the data?
+L209: You can access historical market data via [API](/api/quickstart.md) which provides raw data in [exchange native format](/faq/data.md#what-is-a-difference-between-exchange-native-and-normalized-data-format) or download [CSV datasets](/downloadable-csv-files/overview.md) with [trades](/downloadable-csv-files/data-types.md#trades), [incremental order book L2 updates](/downloadable-csv-files/data-types.md#incremental_book_l2), order book snapshots ([top 25](/downloadable-csv-files/data-types.md#book_snapshot_25) and [top 5](/downloadable-csv-files/data-types.md#book_snapshot_5)), [options chains](/downloadable-csv-files/data-types.md#options_chain), [quotes](/downloadable-csv-files/data-types.md#quotes), [book tickers](/downloadable-csv-files/data-types.md#book_ticker), [derivative tickers](/downloadable-csv-files/data-types.md#derivative_ticker) (open interest, funding, mark price, index price) and [liquidations](/downloadable-csv-files/data-types.md#liquidations).
+L210: [Our client libs](/api/quickstart.md) provide data in [normalized format](/faq/data.md#what-is-a-difference-between-exchange-native-and-normalized-data-format) as well, which can be more flexible than CSV datasets for some use cases but also slower to download due to on-demand, client-side data normalization overhead in comparison to ready to download CSV files.
+L211: {% hint style="info" %}
+L212: **Replay API** supports custom time windows with minute precision (e.g., `2024-01-15T09:30:00.000Z` to `2024-01-15T16:00:00.000Z`). **CSV datasets** are available as daily files.
+L213: {% endhint %}
+L214: ### What can affect CSV dataset download speed?
+L215: 
+L216: CSV dataset download speed depends mainly on the network path between your location and our primary cloud storage in the US East region. Longer cross-continent routes, local network conditions and temporary public Internet congestion can affect throughput.
+L217: Very rarely, a cloud storage service may be temporarily slower or unavailable. We recommend using the latest [official Python or Node.js clients](/downloadable-csv-files/overview.md#download-via-client-libraries). They download multiple files concurrently and automatically retry transient network or storage errors.
+L218: ### What programming languages are supported?
+L219: 
+L220: Any programming language that can communicate using HTTPS can communicate with our [HTTP API](/api/http-api-reference.md).
+L221: 
+L222: We provide official [Python](/python-client/quickstart.md) and [Node.js](/node-client/quickstart.md) clients for accessing tick-level historical market data.
+L223: Finally, our open source, locally runnable [tardis-machine](/tardis-machine/quickstart.md) server with built-in local data caching provides market data normalization, custom order book snapshot capabilities, and real-time market data streaming support that connects directly to exchanges' WebSocket APIs.
+L224: It provides both streaming HTTP and WebSocket endpoints returning market data for whole time periods (in contrast to Tardis.dev [HTTP API](/api/http-api-reference.md), where a single call returns 1 to 10 minutes of data) and is available via npm and as a Docker image.
+L225: ### What API protocols can be used to access market data?
+L226: 
+L227: Historical market data provided by [HTTP API](/api/http-api-reference.md) can be accessed via HTTPS.
+L228: 
+L229: Locally runnable [tardis-machine](/tardis-machine/quickstart.md) server provides both HTTP and WebSocket based APIs for accessing both historical and real-time market data.
+L230: ### How does time-machine market replay work?
+L231: Exchange WebSocket APIs are built for real-time feeds, not historical replay. Locally runnable [Tardis Machine](/tardis-machine/replaying-historical-data.md#websocket-ws-replay-exchange-exchange-and-from-fromdate-and-to-todate) bridges that gap by replaying historical exchange-native data through a WebSocket API with the same subscribe-style flow as exchange real-time APIs. In many cases, an existing exchange WebSocket client can replay a historical date range by changing the endpoint URL.
+L232: ### Do you support consolidated real-time market data streaming?
+L233: 
+L234: We do not provide a hosted real-time market data API. Exchanges already provide public real-time WebSocket feeds directly, and a hosted Tardis.dev real-time API would add latency and another dependency.
+L235: 
+L236: Use the [open source clients and locally runnable Tardis Machine](/api/quickstart.md) for consolidated real-time streaming. They are self-hosted, free to use, and connect directly to exchange WebSocket APIs without a Tardis.dev API key.
+L237: ### Are there any rate-limits for the API?
+L238: 
+L239: Yes. See [API Rate Limits](/api/rate-limits.md) for account-level API request and data transfer limits.
+L240: 
+L241: ## API keys
+L242: ### How do I obtain my API key?
+L243: 
+L244: Ask an [AI agent](/agents-and-ai.md), or choose **Create Data API key** in your [account](https://tardis.dev/account#api-keys). You need a [subscription](https://tardis.dev/#order) or a [free trial](/faq/billing-and-subscriptions.md#how-do-free-trials-work) first. Copy the key when it's shown, because you won't see it again.
+L245: ### How can I rotate or reset my API key?
+L246: 
+L247: Ask an [AI agent](/agents-and-ai.md), or choose **Rotate** next to the key in your [account](https://tardis.dev/account#api-keys). You get a new key at once, and the previous one keeps working for 1 hour; an account can rotate keys 3 times in 24 hours. If a key was compromised, choose **Revoke** to stop it immediately.
+L248: ### Why doesn't my API key work?
+L249: 
+L250: The error message says why:
+L251: * "This account does not have access to…": the exchange or date you requested is outside your subscription's [data plan](/faq/billing-and-subscriptions.md#how-does-subscription-based-access-work) or [historical data range](/faq/billing-and-subscriptions.md#how-much-historical-data-does-my-subscription-include), or outside a [free trial's](/faq/billing-and-subscriptions.md#how-do-free-trials-work) days 1–10 of the previous month. Solo and Academic subscriptions include CSV files only.
+L252: * "Your account has no data access yet…", "Your free trial has expired…" or "Your subscription access has ended…": the account has no active trial or subscription. A subscription paid by bank transfer starts when the payment arrives; after a failed renewal, see [What happens if a renewal payment fails?](/faq/billing-and-subscriptions.md#what-happens-if-a-renewal-payment-fails)
+L253: * "This Data API key is already active from another IP address": except with Business subscriptions, a key works from [one IP address at a time](/api/rate-limits.md#api-key-usage). Another IP address can use it 15 minutes after the last request from the first one.
+L254: * "This account has reached its data transfer limit": see your usage and reset date in your account and the [data transfer limits](/api/rate-limits.md#data-transfer-limits).
+L255: * "This account is sending Data Feed requests too quickly": retry after the seconds in the `retry-after` header, and see the [request limits](/api/rate-limits.md#request-limits).
+L256: * "Unauthorized": the key is missing, mistyped, revoked, or was rotated more than an hour ago. Send it as `Authorization: Bearer YOUR_API_KEY`.
+L257: ## Support and infrastructure
+L258: 
+L259: ### What are the email support response targets?
+L260: 
+L261: We aim to send an initial response to support emails within:
+L262: 
+L263: | Subscription type | Initial response target |
+L264: | ----------------- | ----------------------- |
+L265: | Academic          | 5 days                  |
+L266: | Solo              | 3 days                  |
+L267: | Professional      | 24 hours                |
+L268: | Business          | 12 hours                |
+L269: ### Can we schedule a call?
+L270: 
+L271: No, we don't do calls. [Contact us](https://tardis.dev/#contact) with your questions and we'll answer them by email.
+L272: 
+L273: ### Do you provide an SLA?
+L274: 
+L275: No, we don't offer an SLA.
+L276: 
+L277: ### What is your infrastructure setup?
+L278: 
+L279: #### Market data collection
+L280: 
+L281: Highly available [Google Cloud Platform Kubernetes Clusters](https://cloud.google.com/kubernetes-engine/) located in London, UK (europe-west2 region) and Tokyo, Japan (asia-northeast1 region)
+L282: #### Market data storage
+L283: 
+L284: Two independent, geo-redundant, highly durable storage services
+L285: 
+L286: #### Market data distribution
+L287: 
+L288: High performance API servers deployed across network of data centers around the globe
+L289: ### What is premium connectivity?
+L290: 
+L291: For Professional and Business subscriptions, API traffic uses premium connectivity: [Cloudflare Argo Smart Routing](https://www.cloudflare.com/application-services/products/argo-smart-routing/) routes it through Cloudflare's private backbone instead of the public internet. This reduces latency, routes around congestion and outages, and gives more predictable response times wherever you are.
+L292: 
+L293: 
+L294: ---
+L295: # Agent Instructions
+L296: This documentation is published with GitBook. GitBook is the documentation platform designed so that both humans and AI agents can read, navigate, and reason over technical content effectively. Learn more at gitbook.com.
+L297: ## Querying This Documentation
+L298: If you need additional information that is not directly available in this page, you can query the documentation by asking a question.
+L299: 
+L300: Perform an HTTP GET request on the following URL with the `ask` and `goal` query parameters:
+L301: 
+L302: ```
+L303: GET https://docs.tardis.dev/faq/general.md?ask=<question>&goal=<user_goal>
+L304: ```
+L305: `ask` is the immediate question: it should be specific, self-contained, and written in natural language.
+L306: `goal` is what the user is ultimately trying to achieve, the reason they need the answer. Sharing it helps GitBook give you a better, more relevant answer. A goal is most helpful when it describes the outcome the user wants rather than restating the question. For example, with `ask=how do I create an API token`, a goal like `automate deployments from our CI pipeline` lets GitBook tailor the answer to that use case.
+L307: The response will contain a direct answer to the question and relevant excerpts and sources from the documentation.
+L308: 
+L309: Use this mechanism when the answer is not explicitly present in the current page, you need clarification or additional context, or you want to retrieve related documentation sections.
+

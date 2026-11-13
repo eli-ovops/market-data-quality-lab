@@ -1,0 +1,13 @@
+# 固定标签关联方法：独立静态审阅
+
+METHOD_READY_WITH_LIMITS；must_fix=[]。UTC日期2026-10-23，精确起止UNKNOWN；actual model/effort/speed UNKNOWN。完整读protocol.json、固定匹配与覆盖方法.md、input-sources.json，未读取四大源正文或关联结果。
+
+唯一主统计是每day/model/delay的F1/H1 equal买打印支持并集，按所引用原selected_first记录和外部buy_order_id去重、原打印grid内ID等权后各组grid等权，D_buy=L_z_buy−L_hash_buy。没有以F已允许成交集合硬造暂停buy组，也未把打印提示换成own提交grid；不复制sell、不乘半、不声称原双侧D复现。两组重叠披露、跨情景重复不当独立样本。F/H各自标签均值不另作第二判定量。
+
+A以全部equal引用tradeID作失败保留分母；B以技术确认外部ID包括later-only ID作分母，两层约束不从成功标签倒选覆盖。未知外部身份不造ID，整批全合格/同loss的fill量覆盖另报，避免partial标签被写成整批fill可归属。multi-ID只作支持集合，不分配fillq；cross不转loss；旧first/reference/time资格不重算、不向后trade移植first标签。具体多义/重复/边界处理须由helper/人工fixture逐项体现，方法ready不等于代码通过。
+
+80%双覆盖及每买组100外部ID不因稀疏放宽。equal fill行数不是unique外部ID上界（multi-ID batch存在），目前不能证明必不足；结构性无sell人口已明确，不要求假造两sell组。不足可显示描述均值但主资格UNKNOWN，不能称无信息。冻结情景只在共同严格前缀描述，全9h状态UNKNOWN。
+
+结果无论正负均只检验旧标签关联迁移，不是提交时可执行优势、本人获单/收益、独立OOS或alpha，不推翻已有现金失败/STOP。结果前规格固定、无置信区间/择优与新费用账，资源和一次读取范围明确。未见改变执行决定的必要修改；下一步只审冻结helper/fixtures/版本身份，不需额外调研。
+
+版本：protocol SHA256 76ef210b29e92307ad50ab67908a878a4eb6de8062a3fb26ae954b5d9b5beb0e；方法SHA256 3d135b50da27e9d5b825fcd5b0d0996dc861877fd80459f461dcdd2201717088；input-sources SHA256 555e27bcbaed27a453d04c3e8d7daa1e1aac6e60a97c5b37064ce1c6e6bc9d1d。输入清单是既存封存身份，不冒充本次已读/已QC源正文。初次按上一单元位置尝试读取未找到，限域rg定位后读取正确新目录，未读额外数据。只写本review。

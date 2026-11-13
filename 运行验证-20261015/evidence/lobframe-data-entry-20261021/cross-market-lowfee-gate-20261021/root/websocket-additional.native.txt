@@ -1,0 +1,800 @@
+WebSocket (https://apidocs.lighter.xyz/docs/websocket-reference)
+citeturn1538view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://apidocs.lighter.xyz/docs/websocket-reference","lineno":260}); Total lines: 1925
+L173:         "status": "in-progress" | "pending" | "open" | "filled" | "canceled" | "canceled-post-only" | "canceled-reduce-only" | "canceled-position-not-allowed" | "canceled-margin-not-allowed" | "canceled-too-much-slippage" | "canceled-not-enough-liquidity" | "canceled-self-trade" | "canceled-expired" | "canceled-oco" | "canceled-child" | "canceled-liquidation" | "canceled-invalid-balance",
+L174:         "trigger_status": "na" | "ready" | "mark-price" | "twap" | "parent-order",
+L175:         "trigger_time": INTEGER,
+L176:         "parent_order_index": INTEGER,
+L177:         "parent_order_id": STRING,
+L178:         "to_trigger_order_id_0": STRING,
+L179:         "to_trigger_order_id_1": STRING,
+L180:         "to_cancel_order_id_0": STRING,
+L181:         "integrator_fee_collector_index": STRING,
+L182:         "integrator_taker_fee": STRING,
+L183:         "integrator_maker_fee": STRING,
+L184:         "block_height": INTEGER,
+L185:         "timestamp": INTEGER,
+L186:         "created_at": INTEGER,
+L187:         "updated_at": INTEGER,
+L188:         "transaction_time": INTEGER
+L189:     }`
+L190: Used in: cite9†Account Market , cite10†Account All Orders , cite11†Account Orders .
+L191: ##
+L192: 
+L193: Trade JSON
+L194: [Button: JSON]
+L195: 
+L196:     `Trade = {
+L197:         "trade_id": INTEGER,
+L198:         "trade_id_str": STRING,
+L199:         "tx_hash": STRING,
+L200:         "type": "trade" | "liquidation" | "deleverage" | "market-settlement",
+L201:         "market_id": INTEGER,
+L202:         "size": STRING,
+L203:         "price": STRING,
+L204:         "usd_amount": STRING,
+L205:         "ask_id": INTEGER,
+L206:         "ask_id_str": STRING,
+L207:         "bid_id": INTEGER,
+L208:         "bid_id_str": STRING,
+L209:         "ask_client_id": INTEGER,
+L210:         "ask_client_id_str": STRING,
+L211:         "bid_client_id": INTEGER,
+L212:         "bid_client_id_str": STRING,
+L213:         "ask_account_id": INTEGER,
+L214:         "bid_account_id": INTEGER,
+L215:         "is_maker_ask": BOOLEAN,
+L216:         "block_height": INTEGER,
+L217:         "timestamp": INTEGER,
+L218:         "taker_fee": INTEGER,                              // omitempty
+L219:         "taker_position_size_before": STRING,               // omitempty
+L220:         "taker_entry_quote_before": STRING,                 // omitempty
+L221:         "taker_initial_margin_fraction_before": INTEGER,    // omitempty
+L222:         "taker_position_sign_changed": BOOLEAN,             // omitempty
+L223:         "maker_fee": INTEGER,                               // omitempty
+L224:         "maker_position_size_before": STRING,               // omitempty
+L225:         "maker_entry_quote_before": STRING,                 // omitempty
+L226:         "maker_initial_margin_fraction_before": INTEGER,    // omitempty
+L227:         "maker_position_sign_changed": BOOLEAN,             // omitempty
+L228:         "transaction_time": INTEGER,
+L229:     }`
+L230: Example:
+L231: [Button: JSON]
+L232: 
+L233:     `{
+L234:         "trade_id":[REDACTED_PHONE],
+L235:         "trade_id_str":"[REDACTED_PHONE]",
+L236:         "tx_hash":"019f2b9c9cc609196316a569541e135a739728e0837fcfb05c913534e305e503c01d5dcfeabeaf81",
+L237:         "type":"trade",
+L238:         "market_id":0,
+L239:         "size":"0.1336",
+L240:         "price":"2181.83",
+L241:         "usd_amount":"291.492488",
+L242:         "ask_id":281476612587355,
+L243:         "ask_id_str":"281476612587355",
+L244:         "bid_id":562948334068259,
+L245:         "bid_id_str":"562948334068259",
+L246:         "ask_client_id":363283,
+L247:         "ask_client_id_str":"363283",
+L248:         "bid_client_id":23004521241,
+L249:         "bid_client_id_str":"23004521241",
+L250:         "ask_account_id":57890,
+L251:         "bid_account_id":317068,
+L252:         "is_maker_ask":false,
+L253:         "block_height":198321831,
+L254:         "timestamp":1773854156654,
+L255:         "taker_position_size_before":"80.5467",
+L256:         "taker_entry_quote_before":"178806.039128",
+L257:         "taker_initial_margin_fraction_before":500,
+L258:         "taker_fee": 196, // omitted if zero
+L259:         "maker_fee":28,
+L260:         "maker_position_size_before":"-4.3180",
+L261:         "maker_entry_quote_before":"9419.085856",
+L262:         "maker_initial_margin_fraction_before":200,
+L263:         "transaction_time":1773854156686065
+L264:     }`
+L265: Used in: cite12†Trade , cite13†Account All , cite9†Account Market , cite14†Account All Trades .
+L266: ##
+L267: 
+L268: Position JSON
+L269: [Button: JSON]
+L270: 
+L271:     `Position = {
+L272:         "market_id": INTEGER,
+L273:         "symbol": STRING,
+L274:         "initial_margin_fraction": STRING,
+L275:         "open_order_count": INTEGER,
+L276:         "pending_order_count": INTEGER,
+L277:         "position_tied_order_count": INTEGER,
+L278:         "sign": INTEGER,
+L279:         "position": STRING,
+L280:         "avg_entry_price": STRING,
+L281:         "position_value": STRING,
+L282:         "unrealized_pnl": STRING,
+L283:         "realized_pnl": STRING,
+L284:         "liquidation_price": STRING,
+L285:         "total_funding_paid_out": STRING,      // omitempty
+L286:         "margin_mode": INTEGER,
+L287:         "allocated_margin": STRING,
+L288:         "total_discount": STRING               // omitempty
+L289:     }`
+L290: Example:
+L291: [Button: JSON]
+L292: 
+L293:     `{
+L294:         "market_id": 101,
+L295:         "symbol": "BTC-USD",
+L296:         "initial_margin_fraction": "0.1",
+L297:         "open_order_count": 2,
+L298:         "pending_order_count": 1,
+L299:         "position_tied_order_count": 3,
+L300:         "sign": 1,
+L301:         "position": "0.5",
+L302:         "avg_entry_price": "20000.00",
+L303:         "position_value": "10000.00",
+L304:         "unrealized_pnl": "500.00",
+L305:         "realized_pnl": "100.00",
+L306:         "liquidation_price": "3024.66",
+L307:         "total_funding_paid_out": "34.2",
+L308:         "margin_mode": 1,
+L309:         "allocated_margin": "46342",
+L310:     }`
+L311: Used in: cite13†Account All , cite9†Account Market , cite15†Account All Positions .
+L312: ##
+L313: 
+L314: PoolShares JSON
+L315: 
+L316: [Button: JSON]
+L317: 
+L318:     `PoolShares = {
+L319:         "public_pool_index": INTEGER,
+L320:         "shares_amount": INTEGER,
+L321:         "entry_usdc": STRING,
+L322:         "principal_amount": STRING,
+L323:         "entry_timestamp": INTEGER
+L324:     }`
+L325: 
+L326: Example:
+L327: 
+L328: [Button: JSON]
+L329: 
+L330:     `{
+L331:         "public_pool_index": 1,
+L332:         "shares_amount": 100,
+L333:         "entry_usdc": "1000.00",
+L334:         "principal_amount": "3000",
+L335:         "entry_timestamp": 3600000
+L336:     }`
+L337: 
+L338: Used in: cite13†Account All , cite15†Account All Positions .
+L339: ##
+L340: 
+L341: Asset JSON
+L342: 
+L343: [Button: JSON]
+L344: 
+L345:     `Asset = {
+L346:         "symbol": STRING,
+L347:         "asset_id": INTEGER,
+L348:         "balance": STRING,
+L349:         "locked_balance": STRING
+L350:     }`
+L351: 
+L352: Example:
+L353: 
+L354: [Button: JSON]
+L355: 
+L356:     `Asset = {
+L357:         "symbol": "ETH",
+L358:         "asset_id": 1,
+L359:         "balance": "6691.4917",
+L360:         "locked_balance": "564.6135"
+L361:     }`
+L362: 
+L363: Used in: cite16†Account All Assets , cite9†Account Market , cite13†Account All .
+L364: ##
+L365: 
+L366: PositionFunding JSON
+L367: 
+L368: [Button: JSON]
+L369: 
+L370:     `PositionFunding = {
+L371:         "timestamp": INTEGER,
+L372:         "market_id": INTEGER,
+L373:         "funding_id": INTEGER,
+L374:         "change": STRING,
+L375:         "rate": STRING,
+L376:         "position_size": STRING,
+L377:         "position_side": "long" | "short",
+L378:         "discount": STRING
+L379:     }`
+L380: [Button: JSON]
+L381: 
+L382:     `{
+L383:         "timestamp": 1773850000000,
+L384:         "market_id": 0,
+L385:         "funding_id": 2001,
+L386:         "change": "0.001",
+L387:         "rate": "0.0001",
+L388:         "position_size": "0.5",
+L389:         "position_side": "long",
+L390:         "discount": "0"
+L391:     }`
+L392: #
+L393: 
+L394: Channels
+L395: 
+L396: To unsubscribe from a channel, use the following syntax:
+L397: 
+L398: [Button: JSON]
+L399: 
+L400:     `{
+L401:         "type": "unsubscribe",
+L402:         "channel": STRING
+L403:     }`
+L404: ##
+L405: 
+L406: Order Book
+L407: The order book channel sends the new ask and bid orders for the given market in batches, every 50ms. While the nonce is tied to Lighter's matching engine, the offset is tied to the API servers; hence, you can expect the offset to change drastically on reconnection if you're routed to a different server. Regardless, on each update the offset will increase, but it's not guaranteed to be continuous. Additionally, this channel sends a complete snapshot on subscription, but only state changes after that.
+L408: To verify the continuity of the data, you can check that `begin_nonce` on the current update matches the `nonce` (i.e. `last_nonce`) of the previous update.
+L409: [Button: JSON]
+L410: 
+L411:     `{
+L412:         "type": "subscribe",
+L413:         "channel": "order_book/{MARKET_INDEX}"
+L414:     }`
+L415: 
+L416: Example Subscription
+L417: 
+L418: [Button: JSON]
+L419: 
+L420:     `{
+L421:         "type": "subscribe",
+L422:         "channel": "order_book/0"
+L423:     }`
+L424: 
+L425: Response Structure
+L426: [Button: JSON]
+L427: 
+L428:     `{
+L429:         "channel": "order_book:{MARKET_INDEX}",
+L430:         "last_updated_at": INTEGER,
+L431:         "offset": INTEGER,
+L432:         "order_book": {
+L433:             "code": INTEGER,
+L434:             "asks": [
+L435:                 {
+L436:                     "price": STRING,
+L437:                     "size": STRING
+L438:                 }
+L439:             ],
+L440:             "bids": [
+L441:                 {
+L442:                     "price": STRING,
+L443:                     "size": STRING
+L444:                 }
+L445:             ],
+L446:             "offset": INTEGER,
+L447:             "nonce": INTEGER,
+L448:             "last_updated_at": INTEGER,
+L449:             "begin_nonce": INTEGER,
+L450: 
+L451:         },
+L452:         "timestamp": INTEGER,
+L453:         "type": "update/order_book"
+L454:     }`
+L455: Example Response
+L456: [Button: JSON]
+L457: 
+L458:     `{
+L459:        "channel":"order_book:0",
+L460:        "last_updated_at":1774884082309144,
+L461:        "offset":1558300,
+L462:        "order_book":{
+L463:           "code":0,
+L464:           "asks":[
+L465:              {
+L466:                 "price":"2064.54",
+L467:                 "size":"0.3285"
+L468:              }
+L469:           ],
+L470:           "bids":[
+L471: 
+L472:           ],
+L473:           "offset":1558300,
+L474:           "nonce":9182390020,
+L475:           "last_updated_at":1774884082309144,
+L476:           "begin_nonce":9182389998
+L477:        },
+L478:        "timestamp":1774884082326,
+L479:        "type":"update/order_book"
+L480:     }`
+L481: ##
+L482: 
+L483: Best Bid and Offer (BBO)
+L484: 
+L485: Updates are triggered on every nonce update for a given market's order book.
+L486: 
+L487: [Button: JSON]
+L488: 
+L489:     `{
+L490:        "type":"subscribe",
+L491:        "channel":"ticker/{MARKET_INDEX}"
+L492:     }`
+L493: 
+L494: Example subscription:
+L495: 
+L496: [Button: JSON]
+L497: 
+L498:     `{
+L499:        "type":"subscribe",
+L500:        "channel":"ticker/0"
+L501:     }`
+L502: 
+L503: Response Structure:
+L504: [Button: JSON]
+L505: 
+L506:     `{
+L507:        "channel": "ticker:{MARKET_INDEX}",
+L508:        "last_updated_at": INTEGER,
+L509:        "nonce": INTEGER,
+L510:        "ticker":{
+L511:           "s": STRING,
+L512:           "a":{
+L513:              "price": STRING,
+L514:              "size": STRING
+L515:           },
+L516:           "b":{
+L517:              "price": STRING,
+L518:              "size": STRING
+L519:           },
+L520:           "last_updated_at":INTEGER
+L521:        },
+L522:        "timestamp": INTEGER,
+L523:        "type":"update/ticker"
+L524:     }`
+L525: 
+L526: Example Response:
+L527: [Button: JSON]
+L528: 
+L529:     `{
+L530:        "channel":"ticker:0",
+L531:        "last_updated_at":1774883844921166,
+L532:        "nonce":9182249734,
+L533:        "ticker":{
+L534:           "s":"ETH",
+L535:           "a":{
+L536:              "price":"2064.48",
+L537:              "size":"0.4950"
+L538:           },
+L539:           "b":{
+L540:              "price":"2064.30",
+L541:              "size":"1.0392"
+L542:           },
+L543:           "last_updated_at":1774883844921166
+L544:        },
+L545:        "timestamp":1774883844933,
+L546:        "type":"update/ticker"
+L547:     }`
+L548: ##
+L549: 
+L550: Market Stats
+L551: 
+L552: `market_stats` and `spot_market_stats` exclude binary options. Use cite17†Binary options market stats for those markets.
+L553: 
+L554: The market stats channel sends the market stat data for a given market. `current_funding_rate` is an estimation of the upcoming funding payment, while `funding_rate` represents the last funding payment that occurred (at `funding_timestamp`). To fetch stats for spot markets, use cite18†spot_market_stats .
+L555: [Button: JSON]
+L556: 
+L557:     `{
+L558:         "type": "subscribe",
+L559:         "channel": "market_stats/{MARKET_INDEX}"
+--------------------------------------------------------------------------------
+WebSocket (https://apidocs.lighter.xyz/docs/websocket-reference)
+citeturn1538view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://apidocs.lighter.xyz/docs/websocket-reference","lineno":500}); Total lines: 1925
+L339: ##
+L340: 
+L341: Asset JSON
+L342: 
+L343: [Button: JSON]
+L344: 
+L345:     `Asset = {
+L346:         "symbol": STRING,
+L347:         "asset_id": INTEGER,
+L348:         "balance": STRING,
+L349:         "locked_balance": STRING
+L350:     }`
+L351: 
+L352: Example:
+L353: 
+L354: [Button: JSON]
+L355: 
+L356:     `Asset = {
+L357:         "symbol": "ETH",
+L358:         "asset_id": 1,
+L359:         "balance": "6691.4917",
+L360:         "locked_balance": "564.6135"
+L361:     }`
+L362: 
+L363: Used in: cite16†Account All Assets , cite9†Account Market , cite13†Account All .
+L364: ##
+L365: 
+L366: PositionFunding JSON
+L367: 
+L368: [Button: JSON]
+L369: 
+L370:     `PositionFunding = {
+L371:         "timestamp": INTEGER,
+L372:         "market_id": INTEGER,
+L373:         "funding_id": INTEGER,
+L374:         "change": STRING,
+L375:         "rate": STRING,
+L376:         "position_size": STRING,
+L377:         "position_side": "long" | "short",
+L378:         "discount": STRING
+L379:     }`
+L380: [Button: JSON]
+L381: 
+L382:     `{
+L383:         "timestamp": 1773850000000,
+L384:         "market_id": 0,
+L385:         "funding_id": 2001,
+L386:         "change": "0.001",
+L387:         "rate": "0.0001",
+L388:         "position_size": "0.5",
+L389:         "position_side": "long",
+L390:         "discount": "0"
+L391:     }`
+L392: #
+L393: 
+L394: Channels
+L395: 
+L396: To unsubscribe from a channel, use the following syntax:
+L397: 
+L398: [Button: JSON]
+L399: 
+L400:     `{
+L401:         "type": "unsubscribe",
+L402:         "channel": STRING
+L403:     }`
+L404: ##
+L405: 
+L406: Order Book
+L407: The order book channel sends the new ask and bid orders for the given market in batches, every 50ms. While the nonce is tied to Lighter's matching engine, the offset is tied to the API servers; hence, you can expect the offset to change drastically on reconnection if you're routed to a different server. Regardless, on each update the offset will increase, but it's not guaranteed to be continuous. Additionally, this channel sends a complete snapshot on subscription, but only state changes after that.
+L408: To verify the continuity of the data, you can check that `begin_nonce` on the current update matches the `nonce` (i.e. `last_nonce`) of the previous update.
+L409: [Button: JSON]
+L410: 
+L411:     `{
+L412:         "type": "subscribe",
+L413:         "channel": "order_book/{MARKET_INDEX}"
+L414:     }`
+L415: 
+L416: Example Subscription
+L417: 
+L418: [Button: JSON]
+L419: 
+L420:     `{
+L421:         "type": "subscribe",
+L422:         "channel": "order_book/0"
+L423:     }`
+L424: 
+L425: Response Structure
+L426: [Button: JSON]
+L427: 
+L428:     `{
+L429:         "channel": "order_book:{MARKET_INDEX}",
+L430:         "last_updated_at": INTEGER,
+L431:         "offset": INTEGER,
+L432:         "order_book": {
+L433:             "code": INTEGER,
+L434:             "asks": [
+L435:                 {
+L436:                     "price": STRING,
+L437:                     "size": STRING
+L438:                 }
+L439:             ],
+L440:             "bids": [
+L441:                 {
+L442:                     "price": STRING,
+L443:                     "size": STRING
+L444:                 }
+L445:             ],
+L446:             "offset": INTEGER,
+L447:             "nonce": INTEGER,
+L448:             "last_updated_at": INTEGER,
+L449:             "begin_nonce": INTEGER,
+L450: 
+L451:         },
+L452:         "timestamp": INTEGER,
+L453:         "type": "update/order_book"
+L454:     }`
+L455: Example Response
+L456: [Button: JSON]
+L457: 
+L458:     `{
+L459:        "channel":"order_book:0",
+L460:        "last_updated_at":1774884082309144,
+L461:        "offset":1558300,
+L462:        "order_book":{
+L463:           "code":0,
+L464:           "asks":[
+L465:              {
+L466:                 "price":"2064.54",
+L467:                 "size":"0.3285"
+L468:              }
+L469:           ],
+L470:           "bids":[
+L471: 
+L472:           ],
+L473:           "offset":1558300,
+L474:           "nonce":9182390020,
+L475:           "last_updated_at":1774884082309144,
+L476:           "begin_nonce":9182389998
+L477:        },
+L478:        "timestamp":1774884082326,
+L479:        "type":"update/order_book"
+L480:     }`
+L481: ##
+L482: 
+L483: Best Bid and Offer (BBO)
+L484: 
+L485: Updates are triggered on every nonce update for a given market's order book.
+L486: 
+L487: [Button: JSON]
+L488: 
+L489:     `{
+L490:        "type":"subscribe",
+L491:        "channel":"ticker/{MARKET_INDEX}"
+L492:     }`
+L493: 
+L494: Example subscription:
+L495: 
+L496: [Button: JSON]
+L497: 
+L498:     `{
+L499:        "type":"subscribe",
+L500:        "channel":"ticker/0"
+L501:     }`
+L502: 
+L503: Response Structure:
+L504: [Button: JSON]
+L505: 
+L506:     `{
+L507:        "channel": "ticker:{MARKET_INDEX}",
+L508:        "last_updated_at": INTEGER,
+L509:        "nonce": INTEGER,
+L510:        "ticker":{
+L511:           "s": STRING,
+L512:           "a":{
+L513:              "price": STRING,
+L514:              "size": STRING
+L515:           },
+L516:           "b":{
+L517:              "price": STRING,
+L518:              "size": STRING
+L519:           },
+L520:           "last_updated_at":INTEGER
+L521:        },
+L522:        "timestamp": INTEGER,
+L523:        "type":"update/ticker"
+L524:     }`
+L525: 
+L526: Example Response:
+L527: [Button: JSON]
+L528: 
+L529:     `{
+L530:        "channel":"ticker:0",
+L531:        "last_updated_at":1774883844921166,
+L532:        "nonce":9182249734,
+L533:        "ticker":{
+L534:           "s":"ETH",
+L535:           "a":{
+L536:              "price":"2064.48",
+L537:              "size":"0.4950"
+L538:           },
+L539:           "b":{
+L540:              "price":"2064.30",
+L541:              "size":"1.0392"
+L542:           },
+L543:           "last_updated_at":1774883844921166
+L544:        },
+L545:        "timestamp":1774883844933,
+L546:        "type":"update/ticker"
+L547:     }`
+L548: ##
+L549: 
+L550: Market Stats
+L551: 
+L552: `market_stats` and `spot_market_stats` exclude binary options. Use cite17†Binary options market stats for those markets.
+L553: 
+L554: The market stats channel sends the market stat data for a given market. `current_funding_rate` is an estimation of the upcoming funding payment, while `funding_rate` represents the last funding payment that occurred (at `funding_timestamp`). To fetch stats for spot markets, use cite18†spot_market_stats .
+L555: [Button: JSON]
+L556: 
+L557:     `{
+L558:         "type": "subscribe",
+L559:         "channel": "market_stats/{MARKET_INDEX}"
+L560:     }`
+L561: 
+L562: or
+L563: 
+L564: [Button: JSON]
+L565: 
+L566:     `{
+L567:         "type": "subscribe",
+L568:         "channel": "market_stats/all"
+L569:     }`
+L570: 
+L571: Example Subscription
+L572: 
+L573: [Button: JSON]
+L574: 
+L575:     `{
+L576:         "type": "subscribe",
+L577:         "channel": "market_stats/0"
+L578:     }`
+L579: 
+L580: Response Structure
+L581: [Button: JSON]
+L582: 
+L583:     `{
+L584:         "channel": "market_stats:{MARKET_INDEX}",
+L585:         "market_stats": {
+L586:           "symbol": STRING,
+L587:           "market_id": INTEGER,
+L588:           "index_price": STRING,
+L589:           "mark_price": STRING,
+L590:           "mid_price": STRING,
+L591:           "best_ask_price": STRING,
+L592:           "best_bid_price": STRING,
+L593:           "open_interest": STRING,
+L594:           "open_interest_limit": STRING,
+L595:           "funding_clamp_small": STRING,
+L596:           "funding_clamp_big": STRING,
+L597:           "last_trade_price": STRING,
+L598:           "current_funding_rate": STRING,
+L599:           "funding_rate": STRING,
+L600:           "funding_timestamp": INTEGER,
+L601:           "daily_base_token_volume": FLOAT,
+L602:           "daily_quote_token_volume": FLOAT,
+L603:           "daily_price_low": FLOAT,
+L604:           "daily_price_high": FLOAT,
+L605:           "daily_price_change": FLOAT,
+L606:           "base_interest_rate": STRING,
+L607:           "premium": STRING // percentage
+L608:         },
+L609:         "timestamp": INTEGER,
+L610:         "type": "update/market_stats"
+L611:     }`
+L612: Example Response
+L613: [Button: JSON]
+L614: 
+L615:     `{
+L616:       "channel": "market_stats:0",
+L617:       "market_stats": {
+L618:         "symbol": "ETH",
+L619:         "market_id": 0,
+L620:         "index_price": "1900.86",
+L621:         "mark_price": "1899.99",
+L622:         "mid_price": "1899.95",
+L623:         "best_ask_price": "1899.95",
+L624:         "best_bid_price": "1899.94",
+L625:         "open_interest": "81885817.089747",
+L626:         "open_interest_limit": "72057594037927936.000000",
+L627:         "funding_clamp_small": "0.0500",
+L628:         "funding_clamp_big": "4.0000",
+L629:         "last_trade_price": "1899.98",
+L630:         "current_funding_rate": "0.0008",
+L631:         "funding_rate": "0.0008",
+L632:         "funding_timestamp": 1786370400000,
+L633:         "daily_base_token_volume": 79940.2167,
+L634:         "daily_quote_token_volume": 153191468.329297,
+L635:         "daily_price_low": 1893.51,
+L636:         "daily_price_high": 1937.78,
+L637:         "daily_price_change": -1.332599347722221,
+L638:         "base_interest_rate": "0.0100",
+L639:         "premium": "-0.0429"
+L640:       },
+L641:       "timestamp": 1786372092759,
+L642:       "type": "update/market_stats"
+L643:     }`
+L644: ##
+L645: 
+L646: Binary Options Market Stats
+L647: Subscribe to `bo_market_stats/{MARKET_INDEX}` for one market or `bo_market_stats/all` for all binary options markets. The all-market response contains a `bo_market_stats` object keyed by market ID; a single-market response contains one stats object. The all-market stream also includes old, settled and not-yet-open markets: filter by `status: "active"`, then check the trading window and `is_frozen` in cite19†events before placing orders. See cite20†Binary options WebSocket for fields and lifecycle statuses.
+L648: ##
+L649: 
+L650: Trade
+L651: 
+L652: The trade channel sends the new trade data for the given market.
+L653: 
+L654: [Button: JSON]
+L655: 
+L656:     `{
+L657:         "type": "subscribe",
+L658:         "channel": "trade/{MARKET_INDEX}"
+L659:     }`
+L660: 
+L661: Example Subscription
+L662: 
+L663: [Button: JSON]
+L664: 
+L665:     `{
+L666:         "type": "subscribe",
+L667:         "channel": "trade/0"
+L668:     }`
+L669: 
+L670: Response Structure
+L671: [Button: JSON]
+L672: 
+L673:     `{
+L674:         "channel": "trade:{MARKET_INDEX}",
+L675:         "liquidation_trades": [Trade],
+L676:         "nonce":INTEGER,
+L677:         "trades": [Trade],
+L678:         "type": "update/trade"
+L679:     }`
+L680: 
+L681: Example Response
+L682: [Button: JSON]
+L683: 
+L684:     `{
+L685:        "channel":"trade:0",
+L686:        "liquidation_trades":[],
+L687:        "nonce":8630448841,
+L688:        "trades":[
+L689:           {
+L690:              "trade_id":[REDACTED_PHONE],
+L691:              "trade_id_str":"[REDACTED_PHONE]",
+L692:              "tx_hash":"019f2b9c9cc609196316a569541e135a739728e0837fcfb05c913534e305e503c01d5dcfeabeaf81",
+L693:              "type":"trade",
+L694:              "market_id":0,
+L695:              "size":"0.1336",
+L696:              "price":"2181.83",
+L697:              "usd_amount":"291.492488",
+L698:              "ask_id":281476612587355,
+L699:              "ask_id_str":"281476612587355",
+L700:              "bid_id":562948334068259,
+L701:              "bid_id_str":"562948334068259",
+L702:              "ask_client_id":363283,
+L703:              "ask_client_id_str":"363283",
+L704:              "bid_client_id":23004521241,
+L705:              "bid_client_id_str":"23004521241",
+L706:              "ask_account_id":57890,
+L707:              "bid_account_id":317068,
+L708:              "is_maker_ask":false,
+L709:              "block_height":198321831,
+L710:              "timestamp":1773854156654,
+L711:              "taker_position_size_before":"80.5467",
+L712:              "taker_entry_quote_before":"178806.039128",
+L713:              "taker_initial_margin_fraction_before":500,
+L714:              "taker_fee": 196, // omitted if zero
+L715:              "maker_fee":28,
+L716:              "maker_position_size_before":"-4.3180",
+L717:              "maker_entry_quote_before":"9419.085856",
+L718:              "maker_initial_margin_fraction_before":200,
+L719:              "transaction_time":1773854156686065
+L720:           }
+L721:        ],
+L722:        "type":"update/trade"
+L723:     }`
+L724: ##
+L725: 
+L726: Candlesticks
+L727: 
+L728: Real-time candlestick (OHLCV) updates via WebSocket. Subscribe to any market and resolution to receive live candle data as trades occur. Supported resolutions: `1m`, `5m`, `15m`, `30m`, `1h`, `4h`, `12h`, `1d`. The candles[] array allows up to 2 candles to be sent in a single update when a candle period closes (rolls over). If so, candles[0] will be the oldest, just closed candle.
+L729: [Button: JSON]
+L730: 
+L731:     `{
+L732:     	"type": "subscribe",
+L733:     	"channel": "candle/{market_id}/{resolution}"
+L734:     }`
+L735: 
+L736: Example Subscription
+L737: 
+L738: [Button: JSON]
+L739: 
+L740:     `{
+L741:     	"type": "subscribe",
+L742:     	"channel": "candle/0/1m"
+L743:     }`
+L744: 
+L745: Response Structure (Subscribe)
+

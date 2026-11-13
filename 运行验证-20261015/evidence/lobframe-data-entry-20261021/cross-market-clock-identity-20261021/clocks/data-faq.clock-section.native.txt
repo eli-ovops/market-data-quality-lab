@@ -1,0 +1,221 @@
+ (https://docs.tardis.dev/faq/data.md)
+citeturn1550view0 [wordlim: 200] Crawled: today; Content type: text/plain; Source: open({"ref_id":"turn1549view0","lineno":280}); Total lines: 356
+L138: * **Client libs / tardis-machine** ([getting started](/api/quickstart.md)) — normalized data types plus additional computed types (trade\_bar, book snapshots with custom intervals, OHLCV, etc.), available for both historical replay and real-time streaming.
+L139: Not every exchange-native channel has a normalized equivalent. If a data type is available as a raw channel but not listed in normalized types above, it can only be accessed via raw replay.
+L140: {% endhint %}
+L141: ### Do you provide market data in normalized format?
+L142: 
+L143: [Normalized market data](#what-is-a-difference-between-exchange-native-and-normalized-data-format) (unified data format for every exchange) is available via our [official libraries](/api/quickstart.md) and [downloadable CSV files](/downloadable-csv-files/overview.md). Our [HTTP API](/api/http-api-reference.md#data-feeds-exchange) provides data only in [exchange-native format](#what-is-a-difference-between-exchange-native-and-normalized-data-format).
+L144: ### What is the difference between `book_ticker` and `quote`?
+L145: 
+L146: Both provide best bid/ask (BBO) data, but from different sources:
+L147: * **`book_ticker`** — sourced from exchanges' native WebSocket BBO channels (e.g., Binance `bookTicker`, Bybit `orderbook.1`). Available via [client libraries](/api/quickstart.md), [tardis-machine](/tardis-machine/quickstart.md) and [CSV datasets](/downloadable-csv-files/data-types.md#book_ticker). See [which exchanges support it](#which-exchanges-support-book_ticker-data-type).
+L148: * **`quote`** (alias for `book_snapshot_1_0ms`) — derived from L2 order book data. Available on all exchanges that provide L2 data. Also available as [`quotes` CSV dataset](/downloadable-csv-files/data-types.md#quotes).
+L149: Update frequency differs between the two and depends on the exchange. For example, on Binance Spot the native `bookTicker` stream fires significantly more often than L2-derived quotes, because the exchange publishes a dedicated BBO update on every best-price change. On other exchanges the difference may be smaller or negligible. Check the update rates for your specific exchange before choosing.
+L150: When using the [replay API](/api/quickstart.md), `book_ticker` can be replayed starting from any point in time since it is a standalone exchange feed. In contrast, `quote` is derived from L2 order book state, which requires an initial snapshot to reconstruct — snapshots are provided at 00:00 UTC each day (and after each [WebSocket reconnect](#how-frequently-do-exchanges-drop-websocket-connections)), so replay should start from 00:00 UTC to get accurate quotes.
+L151: ### Does Tardis provide precomputed indicators or OHLCV candles?
+L152: 
+L153: Tardis provides raw tick-level market data (trades, order book updates, funding rates, liquidations, etc.) — not precomputed indicators, aggregated Kline/OHLCV candles, or hosted analytics. OHLCV bars and other derived metrics can be computed client-side from our data, for example using `trade_bar` data type in [tardis-machine](/tardis-machine/quickstart.md) or [client libraries](/api/quickstart.md).
+L154: ### Do you provide time based aggregated data as well?
+L155: 
+L156: Our APIs (both [HTTP](/api/http-api-reference.md#data-feeds-exchange) and [CSV datasets](/downloadable-csv-files/api.md#datasets-api-details)) provide tick-level data only and do not support time-based aggregated data.
+L157: If you need aggregated data (OHLC, interval-based order book snapshots), our [client libs](/api/quickstart.md) can compute it, but aggregation runs client-side from tick-level data, so it is slower than downloading pre-aggregated files.
+L158: ### What is the `channel` field used in the HTTP API and client libs `replay` functions?
+L159: When exchanges publish real-time data messages, they always publish them for the subscription topics clients subscribed to. These subscription topics are also often called "channels" or "streams" in exchange documentation and describe the data type a given message belongs to.
+L160: For example, [Binance Spot](/historical-data-details/binance.md) publishes its trade data via [trade channel](/historical-data-details/binance.md#captured-real-time-channels) and order book L2 update data via [depth](/historical-data-details/binance.md#captured-real-time-channels).
+L161: Since we collect the data for all the channels described in exchanges' details page ([Captured real-time market data channels section](/historical-data-details/binance.md#captured-real-time-channels)) our [HTTP API](/api/http-api-reference.md#data-feeds-exchange) and [client libs](/api/quickstart.md) offer filtering capability by those channels names, so for example to get historical trades for [Binance Spot](/historical-data-details/binance.md), channel [trade](/historical-data-details/binance.md#captured-real-time-channels) needs to be provided alongside requested instruments symbols (via HTTP API or client lib `replay` function args).
+L162: ### How are CSV datasets split into files?
+L163: CSV datasets are available in daily intervals split by exchange, data type, and symbol. In addition to standard currency pairs/instrument symbols, each exchange also has special [grouped symbols](/downloadable-csv-files/overview.md#grouped-symbols) available depending on whether it supports a given market type: SPOT, FUTURES, OPTIONS, PERPETUALS, COMBOS, and PREDICTIONS.
+L164: That feature is useful if someone is interested in, for example, all Deribit's options instruments trades or quotes data without requesting data for each symbol separately.
+L165: ## Data sources and collection
+L166: ### How is historical raw market data sourced?
+L167: 
+L168: Raw market data is sourced from exchanges' real-time WebSocket APIs. For cases where an exchange lacks a WebSocket API for a particular data type, we fall back to polling a REST API periodically, e.g., Binance USDS-M Futures open interest data.
+L169: {% hint style="info" %}
+L170: See [market data collection overview](/historical-data-details.md#market-data-collection-overview) for more details and why [data source matters](#why-data-source-matters-websocket-feeds-vs-rest-endpoints).
+L171: {% endhint %}
+L172: ### Why data source matters — WebSocket feeds vs REST endpoints
+L173: 
+L174: Recording exchanges' real-time WebSocket feeds preserves [the most granular data](#what-does-high-frequency-historical-data-mean) that exchanges publish, including tick-level order book updates that are not available via REST APIs.
+L175: WebSocket-sourced historical data reflects what a live trading client would have received, including exchange-side behavior such as [connection drops](#is-provided-raw-market-data-complete), publishing delays during volatile periods, [duplicated trades](#do-exchanges-publish-duplicate-trades), or [crossed books](/faq/order-books.md#can-reconstructed-order-books-have-bid-ask-overlap) in edge cases.
+L176: This makes it useful for market microstructure research and realistic replay, but it also means raw data is not corrected after the fact.
+L177: For example, during volatility an exchange may publish WebSocket messages with higher-than-usual latency or batch delayed updates. A REST endpoint may return a cleaner history after the fact, but it will not show the conditions a live client saw at that time.
+L178: 
+L179: {% hint style="info" %}
+L180: See [market data collection overview](/historical-data-details.md#market-data-collection-overview) for more details.
+L181: {% endhint %}
+L182: ### What is the historical market data delay in relation to real-time?
+L183: 
+L184: For [raw data replay API](/api/quickstart.md) the most recent data available is approximately T-6 minutes from the current time.
+L185: 
+L186: [Downloadable CSV files](/downloadable-csv-files/overview.md) for a given day are available on the next day around 06:00 UTC — see [CSV readiness](/downloadable-csv-files/overview.md) for details.
+L187: ### Can you record market data for an exchange that's not currently supported?
+L188: 
+L189: Yes, we're always open to support new promising exchanges. [Contact us](https://tardis.dev/#contact) and we'll get back to you to discuss the details.
+L190: 
+L191: ## Instruments and symbols
+L192: ### How do symbol IDs differ between raw replay and CSV datasets?
+L193: 
+L194: The [`/exchanges/:exchange`](/api/http-api-reference.md#exchanges-exchange) API returns two separate symbol lists with different ID formats:
+L195: * **`availableSymbols[].id`** — used for [raw data replay](/api/http-api-reference.md#data-feeds-exchange). These are exchange-native symbol IDs as used in WebSocket subscriptions (e.g., `btcusdt` for Binance, `BTC-PERPETUAL` for Deribit).
+L196: * **`datasets.symbols[].id`** — used for [CSV dataset downloads](/downloadable-csv-files/overview.md). These are CSV dataset symbols: they are uppercased, and `/` and `:` are replaced with `-`. They can still contain non-ASCII or reserved URL characters, so URL-encode the symbol path segment when constructing dataset URLs manually. Official clients do this automatically.
+L197: The [Instruments Metadata API](/api/instruments-metadata-api.md) provides `id` for exchange-native symbols and `datasetId` for CSV dataset symbols after the symbol appears in exported dataset metadata.
+L198: ### Does your historical data include delisted or expired instruments?
+L199: 
+L200: Yes. Our historical datasets are free of survivorship bias — they include all instruments that were actively trading at the time of data collection, including those that have since been delisted, expired, or renamed by the exchange.
+L201: Note that for some spot exchanges, early historical coverage was limited to high-cap currency pairs only. See individual exchange pages in [Historical Data Details](/historical-data-details.md) for exact coverage boundaries and start dates.
+L202: ### Can the same symbol ID refer to different assets over time?
+L203: 
+L204: Yes. Exchanges may reuse symbol identifiers for different assets — for example, delisting a token and later listing a different token under the same symbol. Tardis passes through symbol IDs as provided by the exchange without modification, so the same symbol string may appear across different time periods for different underlying assets. Verify token identity using additional context such as price levels or exchange announcements.
+L205: ### Do you provide historical futures data?
+L206: 
+L207: Yes. We provide historical futures and perpetual swaps data across leading derivatives venues. See [Historical Data Details](/historical-data-details.md) for the current exchange list and per-exchange coverage.
+L208: ### What is the difference between futures and perpetual swaps contracts?
+L209: 
+L210: Futures contract is a contract that has expiry date (for example quarter ahead for quarterly futures). Futures contract price converges to spot price as the contract approaches expiration/settlement date. After futures contract expires, exchange settles it and replaces with a new contract for the next period (next quarter for our previous example).
+L211: A perpetual swap contract, also commonly called "perp", "swap", "perpetual", or "perpetual future" in crypto exchange nomenclature, is very similar to a futures contract but does not have an expiry date (hence perpetual). To ensure that the perpetual swap contract price stays near the spot price, exchanges employ a mechanism called funding rate. When the funding rate is positive, Longs pay Shorts. When the funding rate is negative, Shorts pay Longs.
+L212: This mechanism can be quite nuanced and vary between exchanges, so it's best to study each contract specification to learn all the details (funding periods, mark price mechanisms, etc.).
+L213: {% hint style="info" %}
+L214: See CSV [grouped symbols section](/downloadable-csv-files/overview.md#grouped-symbols) if you'd like to download data for all futures or perpetual swaps as a single file for given exchange instead one by one for each individual instrument.
+L215: {% endhint %}
+L216: ### Do you provide historical options data?
+L217: Yes, we do provide historical options data for [Binance European Options](/historical-data-details/binance-european-options.md), [OKX Options](/historical-data-details/okex-options.md), [Deribit](/historical-data-details/deribit.md), [Bybit Options](/historical-data-details/bybit-options.md), [Kraken Futures](/historical-data-details/cryptofacilities.md), [Bullish](/historical-data-details/bullish.md), and [HTX Options](/historical-data-details/huobi-dm-options.md) (delisted) - see [options chain](/downloadable-csv-files/data-types.md#options_chain) CSV data type and the corresponding exchange details pages.
+L218: ### Do you provide normalized contract amounts for derivatives?
+L219: 
+L220: Data we provide has contract amounts exactly as provided by exchanges' APIs, meaning the `amount` field may represent contracts, base-asset units, or USD depending on the exchange. This can be tricky when comparing across exchanges due to different contract multipliers (e.g., OKX where each contract has a $100 value) or different contract types (linear or inverse).
+L221: We provide the [instruments metadata API](/api/instruments-metadata-api.md) that returns `contractMultiplier`, `inverse`, `contractType`, tick sizes, and more for each instrument in a uniform way, allowing you to normalize contract amounts client-side. Use the following formulas for **futures and perpetual contracts**:
+L222: | Contract type             | Base-asset volume                     | USD notional                          |
+L223: | ------------------------- | ------------------------------------- | ------------------------------------- |
+L224: | Linear (`inverse: false`) | `amount × contractMultiplier`         | `amount × contractMultiplier × price` |
+L225: | Inverse (`inverse: true`) | `amount × contractMultiplier / price` | `amount × contractMultiplier`         |
+L226: {% hint style="warning" %}
+L227: These formulas apply to standard futures and perpetual contracts. Quanto contracts (`quanto_future`, `quanto_perpetual`) and options require different treatment — consult exchange-specific documentation for their volume calculations.
+L228: {% endhint %}
+L229: ## Coverage by data type
+L230: ### Which exchanges support liquidations data type?
+L231: [Liquidations](https://medium.com/tardis-dev/live-liquidations-monitor-for-top-cryptocurrency-exchanges-ac8e429e9556) data is sourced from exchanges' WebSocket APIs when supported, with fallback to polling REST APIs when WebSocket APIs do not support that data type, and can be accessed via [raw data APIs (replaying relevant channels)](/api/quickstart.md) or as a [normalized data type via CSV downloads](/downloadable-csv-files/data-types.md#liquidations).
+L232: | exchange                                                                 | available since | data source                                                                                                                                                                |
+L233: | ------------------------------------------------------------------------ | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+L234: | [Binance USDS-M Futures](/historical-data-details/binance-futures.md)    | 2020-01-07      | WS `forceOrder` stream                                                                                                                                                     |
+L235: | [Binance COIN Futures](/historical-data-details/binance-delivery.md)     | 2020-07-08      | WS `forceOrder` stream                                                                                                                                                     |
+L236: | [OKX Futures](/historical-data-details/okex-futures.md)                  | 2020-12-17      | WS `futures/liquidation` channel (before 2021-12-23); WS `liquidations` channel since 2021-12-23                                                                           |
+L237: | [OKX Swap](/historical-data-details/okex-swap.md)                        | 2020-12-18      | WS `swap/liquidation` channel (before 2021-12-23); WS `liquidations` channel since 2021-12-23                                                                              |
+L238: | [BitMEX](/historical-data-details/bitmex.md)                             | 2019-03-30      | WS `liquidation` channel                                                                                                                                                   |
+L239: | [Deribit](/historical-data-details/deribit.md)                           | 2019-03-30      | WS `trades` channel (trades with `liquidation` flag); data available until 2023-10-03 (Deribit removed the liquidation field from public trade subscriptions on that date) |
+L240: | [Bybit Derivatives](/historical-data-details/bybit.md)                   | 2020-11-03      | WS `liquidation` channel (before 2023-04-05); WS `allLiquidation` channel since 2025-02-25                                                                                 |
+L241: | [Kraken Futures](/historical-data-details/cryptofacilities.md)           | 2019-03-30      | WS `trade` channel (trades with `liquidation` type)                                                                                                                        |
+L242: | [Bitfinex Derivatives](/historical-data-details/bitfinex-derivatives.md) | 2019-09-14      | WS `liquidations` channel                                                                                                                                                  |
+L243: | [Aster Futures](/historical-data-details/aster-futures.md)               | 2026-08-23      | WS `forceOrder` channel                                                                                                                                                    |
+L244: | [Bitget Futures](/historical-data-details/bitget-futures.md)             | 2026-04-28      | WS `liquidation` channel; since 2026-06-23 only the largest long and the largest short liquidation per symbol each second                                                  |
+L245: | [HTX Coin-M Futures](/historical-data-details/huobi-dm.md)               | 2020-06-23      | WS `liquidation_orders` channel                                                                                                                                            |
+L246: | [HTX Coin-M Perpetual](/historical-data-details/huobi-dm-swap.md)        | 2020-06-23      | WS `liquidation_orders` channel                                                                                                                                            |
+L247: | [HTX USDT-M Contracts](/historical-data-details/huobi-dm-linear-swap.md) | 2020-10-30      | WS `liquidation_orders` channel                                                                                                                                            |
+L248: | [Lighter](/historical-data-details/lighter.md)                           | 2026-04-17      | WS `trade` channel (`liquidation_trades` payload)                                                                                                                          |
+L249: | [Lighter RH](/historical-data-details/lighter-rh.md)                     | 2026-09-23      | WS `trade` channel (`liquidation_trades` payload)                                                                                                                          |
+L250: | [dYdX v4](/historical-data-details/dydx-v4.md)                           | 2024-08-23      | WS `trades` channel (trades with `liquidation` type)                                                                                                                       |
+L251: {% hint style="info" %}
+L252: Binance `forceOrder` streams push snapshot data at most once per second since April 2021 (no longer real-time individual events). Tardis captures exactly what exchanges publish — liquidation data should not be assumed to contain every individual liquidation event.
+L253: {% endhint %}
+L254: ### Which exchanges support book\_ticker data type?
+L255: 
+L256: `book_ticker` provides top of the book (best bid/ask) data captured directly from exchanges' native WebSocket best bid/offer channels. See [book\_ticker vs quote](#what-is-the-difference-between-book_ticker-and-quote) for how it differs from L2-derived quotes.
+L257: | exchange                                                                         | available since | data source                                                                                                              |
+L258: | -------------------------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------ |
+L259: | [Binance Spot](/historical-data-details/binance.md)                              | 2019-09-21      | WS `bookTicker` channel                                                                                                  |
+L260: | [Binance USDS-M Futures](/historical-data-details/binance-futures.md)            | 2019-11-17      | WS `bookTicker` channel                                                                                                  |
+L261: | [Binance COIN Futures](/historical-data-details/binance-delivery.md)             | 2020-06-16      | WS `bookTicker` channel                                                                                                  |
+L262: | [Binance European Options](/historical-data-details/binance-european-options.md) | 2025-12-17      | WS `bookTicker` channel                                                                                                  |
+L263: | [Binance US](/historical-data-details/binance-us.md)                             | 2019-09-25      | WS `bookTicker` channel                                                                                                  |
+L264: | [OKX Futures](/historical-data-details/okex-futures.md)                          | 2019-03-30      | WS `futures/ticker` channel (before 2021-12-23); WS `tickers` channel (before 2022-05-06); WS `bbo-tbt` since 2022-05-06 |
+L265: | [OKX Swap](/historical-data-details/okex-swap.md)                                | 2019-03-30      | WS `swap/ticker` channel (before 2021-12-23); WS `tickers` channel (before 2022-05-06); WS `bbo-tbt` since 2022-05-06    |
+L266: | [OKX Options](/historical-data-details/okex-options.md)                          | 2020-02-01      | WS `option/ticker` channel (before 2021-12-23); WS `tickers` channel (before 2022-05-06); WS `bbo-tbt` since 2022-05-06  |
+L267: | [OKX Spot](/historical-data-details/okex.md)                                     | 2019-03-30      | WS `spot/ticker` channel (before 2021-12-23); WS `tickers` channel (before 2022-05-06); WS `bbo-tbt` since 2022-05-06    |
+L268: | [OKX Nitro Spreads](/historical-data-details/okex-spreads.md)                    | 2023-12-22      | WS `sprd-bbo-tbt` channel                                                                                                |
+L269: | [Coinbase Exchange](/historical-data-details/coinbase.md)                        | 2019-03-30      | WS `ticker` channel                                                                                                      |
+L270: | [Coinbase Derivatives](/historical-data-details/coinbase-derivatives.md)         | 2026-10-14      | WS `ticker` channel                                                                                                      |
+L271: | [Coinbase International](/historical-data-details/coinbase-international.md)     | 2024-10-31      | WS `LEVEL1` channel                                                                                                      |
+L272: | [BitMEX](/historical-data-details/bitmex.md)                                     | 2019-03-30      | WS `quote` channel                                                                                                       |
+L273: | [Deribit](/historical-data-details/deribit.md)                                   | 2019-10-01      | WS `ticker` channel                                                                                                      |
+L274: | [Bybit Derivatives](/historical-data-details/bybit.md)                           | 2023-04-05      | WS `orderbook.1` channel                                                                                                 |
+L275: | [Bybit Spot](/historical-data-details/bybit-spot.md)                             | 2021-12-04      | WS `bookTicker` channel (before 2023-04-05); WS `orderbook.1` since 2023-04-05                                           |
+L276: | [Kraken Futures](/historical-data-details/cryptofacilities.md)                   | 2019-03-30      | WS `ticker` channel                                                                                                      |
+L277: | [Kraken](/historical-data-details/kraken.md)                                     | 2019-06-04      | WS `spread` channel before 2026-07-10; WS v2 `ticker` channel since 2026-07-10                                           |
+L278: | [Bitfinex Derivatives](/historical-data-details/bitfinex-derivatives.md)         | 2019-09-14      | WS `ticker` channel                                                                                                      |
+L279: | [Bitfinex](/historical-data-details/bitfinex.md)                                 | 2019-05-23      | WS `ticker` channel                                                                                                      |
+L280: | [KuCoin Futures](/historical-data-details/kucoin-futures.md)                     | 2024-01-25      | WS `contractMarket/tickerV2` channel                                                                                     |
+L281: | [KuCoin Spot](/historical-data-details/kucoin.md)                                | 2022-08-16      | WS `market/ticker` channel                                                                                               |
+L282: | [Aster Futures](/historical-data-details/aster-futures.md)                       | 2026-08-23      | WS `bookTicker` channel                                                                                                  |
+L283: | [Aster Spot](/historical-data-details/aster.md)                                  | 2026-08-23      | WS `bookTicker` channel                                                                                                  |
+L284: | [MEXC Spot](/historical-data-details/mexc.md)                                    | 2026-06-25      | WS `[REDACTED_EMAIL]@10ms` channel                                                                 |
+L285: | [Crypto.com](/historical-data-details/crypto-com.md)                             | 2022-06-01      | WS `ticker` channel                                                                                                      |
+L286: | [Bitvavo](/historical-data-details/bitvavo.md)                                   | 2026-09-23      | WS `ticker` channel                                                                                                      |
+L287: | [Bitget Futures](/historical-data-details/bitget-futures.md)                     | 2024-11-08      | WS `books1` channel                                                                                                      |
+L288: | [Bitget Spot](/historical-data-details/bitget.md)                                | 2024-11-08      | WS `books1` channel                                                                                                      |
+L289: | [Gate.io Futures](/historical-data-details/gate-io-futures.md)                   | 2022-03-17      | WS `book_ticker` channel                                                                                                 |
+L290: | [Gate.io](/historical-data-details/gate-io.md)                                   | 2023-04-29      | WS `book_ticker` channel                                                                                                 |
+L291: | [HTX Coin-M Futures](/historical-data-details/huobi-dm.md)                       | 2020-06-23      | WS `bbo` channel                                                                                                         |
+L292: | [HTX Coin-M Perpetual](/historical-data-details/huobi-dm-swap.md)                | 2020-08-17      | WS `bbo` channel                                                                                                         |
+L293: | [HTX USDT-M Contracts](/historical-data-details/huobi-dm-linear-swap.md)         | 2020-10-30      | WS `bbo` channel                                                                                                         |
+L294: | [HTX Spot](/historical-data-details/huobi.md)                                    | 2019-11-19      | WS `bbo` channel                                                                                                         |
+L295: | [Gemini](/historical-data-details/gemini.md)                                     | 2026-07-24      | WS `bookTicker` channel                                                                                                  |
+L296: | [WOO X](/historical-data-details/woo-x.md)                                       | 2023-01-20      | WS `bbo` channel                                                                                                         |
+L297: | [Delta Exchange](/historical-data-details/delta.md)                              | 2023-04-01      | WS `l1_orderbook` channel                                                                                                |
+L298: | [AscendEX](/historical-data-details/ascendex.md)                                 | 2021-03-28      | WS `bbo` channel                                                                                                         |
+L299: | [bitFlyer](/historical-data-details/bitflyer.md)                                 | 2019-08-30      | WS `lightning_ticker` channel                                                                                            |
+L300: | [Hyperliquid](/historical-data-details/hyperliquid.md)                           | 2025-06-26      | WS `bbo` channel                                                                                                         |
+L301: | [Lighter](/historical-data-details/lighter.md)                                   | 2026-04-17      | WS `ticker` channel                                                                                                      |
+L302: | [Lighter RH](/historical-data-details/lighter-rh.md)                             | 2026-09-23      | WS `ticker` channel                                                                                                      |
+L303: | [Polymarket](/historical-data-details/polymarket.md)                             | 2026-05-25      | WS `best_bid_ask` channel                                                                                                |
+L304: | [Bullish](/historical-data-details/bullish.md)                                   | 2026-04-29      | WS `l1Orderbook` channel                                                                                                 |
+L305: ## Data quality, timestamps and ordering
+L306: ### Is provided raw market data complete?
+L307: 
+L308: Raw WebSocket-sourced data can have gaps. Some gaps come from exchange-side behavior, such as exchange maintenance, API outages, [connection drops](#how-frequently-do-exchanges-drop-websocket-connections), upstream API changes, or unexpected upstream rate limits. Gaps can also come from Tardis.dev market data collection issues.
+L309: Historically, collection completeness is around 99.9% and reaches 99.99% on many days. These are historical observations, not guaranteed service levels.
+L310: 
+L311: Known incidents in Tardis.dev market data collection are listed in `incidentReports` from the [`/exchanges/:exchange`](/api/http-api-reference.md#exchanges-exchange) API endpoint. We do not use `incidentReports` as a complete log of exchange maintenance, exchange outages, or other upstream exchange-side issues.
+L312: Data gaps caused by exchange outages or collection interruptions are permanent because real-time WebSocket feed messages cannot be retroactively retrieved.
+L313: ### Can exchange data contain invalid or extreme values?
+L314: 
+L315: Yes. Tardis stores and serves exchange payloads exactly as received, without modification or filtering. If an exchange publishes an invalid price, extreme value, or malformed field, it will appear in the data as-is. This preserves full fidelity of the original feed. Apply your own validation and sanitization downstream when consuming raw data.
+L316: 
+L317: ### What time zone is used in the data?
+L318: 
+L319: UTC, always.
+L320: ### How are market data messages timestamped?
+L321: Each message received via WebSocket connection is timestamped with 100ns precision using [synchronized clock](https://developers.google.com/time) at arrival time (before any message processing) and stored in ISO 8601 format. Note that data is collected from different server locations depending on the exchange ([see market data collection overview](/historical-data-details.md#market-data-collection-overview)).
+L322: Local timestamps for exchanges collected from the same server location are directly comparable, but cross-region comparisons (e.g., London vs Tokyo) should not be used for sub-millisecond latency analysis.
+L323: ### How are events ordered when multiple messages share the same timestamp?
+L324: 
+L325: Row order in both replay API responses and CSV files reflects the original capture order — the sequence in which messages were received from the exchange WebSocket connection. When multiple events share the same millisecond exchange timestamp, use the row position (or `localTimestamp` ordering) as the tie-breaker rather than rounding or deduplicating by exchange timestamp.
+L326: ### Are trades and order book updates synchronized across channels?
+L327: Exchanges publish different data types (trades, order book updates, tickers, etc.) on independent WebSocket channels — often processed by separate backend services or workers. There is no cross-channel ordering guarantee from exchanges. For example, Deribit explicitly documents that cross-instrument timing is "inherently asynchronous" with separate internal workers per currency. Other exchanges (Binance, Bybit, OKX) are silent on cross-channel ordering, which in practice means no guarantee.
+L328: This means a trade's exchange timestamp does not guarantee that the order book state at that exact timestamp reflects the pre- or post-trade book. Similarly, different symbols — even on the same channel — may be served by different backend servers and arrive independently.
+L329: Tardis preserves the original message arrival order and never reorders events. In historical replay and CSV files, all messages are sorted by `localTimestamp` (the time we received the message), providing a chronological sequence across data types as observed from our collection servers.
+L330: ### How frequently do exchanges drop WebSocket connections?
+L331: As long as an exchange WebSocket API is not hidden behind a Cloudflare proxy (causing relatively frequent "CloudFlare WebSocket proxy restarting, Connection reset by peer" errors), connections are stable for the majority of supported exchanges and there are almost no connection drops during the day. During periods of higher market volatility, some exchanges tend to drop connections more frequently or have larger latency spikes. Overall, it's a nuanced matter that changes over time.
+L332: If you have any questions regarding a particular exchange, please do not hesitate to [contact us](https://tardis.dev/#contact).
+L333: ### Do exchanges publish duplicate trades?
+L334: Some exchanges are occasionally publishing duplicated trades (trades with the same ids). Since we collect real-time data we also collect and provide duplicate trades via [API](/api/quickstart.md) if those were published by real-time WebSocket feeds of exchanges.
+L335: Our [client libraries](/api/quickstart.md) have functionality that when working with [normalized data](#what-is-a-difference-between-exchange-native-and-normalized-data-format) can deduplicate such trades, similarly for [downloadable CSV files](/downloadable-csv-files/overview.md) we deduplicate [tick-by-tick trades](/downloadable-csv-files/data-types.md#trades) data.
+L336: ### Can timestamps be non-monotonic within a channel?
+L337: That shouldn't happen in theory, but we've detected that for some exchanges when new connection is established sometimes first message for given channel & symbol has newer timestamp than subsequent message, e.g., order book snapshot has newer timestamp than first order book update.
+L338: This is why we provide data via [API](/api/quickstart.md) and [CSV downloads](/downloadable-csv-files/overview.md) for given data ranges based on [local timestamps](#how-are-market-data-messages-timestamped) (timestamp of message arrival) which are always monotonically increasing.
+L339: 
+L340: ---
+L341: # Agent Instructions
+L342: This documentation is published with GitBook. GitBook is the documentation platform designed so that both humans and AI agents can read, navigate, and reason over technical content effectively. Learn more at gitbook.com.
+L343: ## Querying This Documentation
+L344: If you need additional information that is not directly available in this page, you can query the documentation by asking a question.
+L345: 
+L346: Perform an HTTP GET request on the following URL with the `ask` and `goal` query parameters:
+L347: 
+L348: ```
+L349: GET https://docs.tardis.dev/faq/data.md?ask=<question>&goal=<user_goal>
+L350: ```
+L351: `ask` is the immediate question: it should be specific, self-contained, and written in natural language.
+L352: `goal` is what the user is ultimately trying to achieve, the reason they need the answer. Sharing it helps GitBook give you a better, more relevant answer. A goal is most helpful when it describes the outcome the user wants rather than restating the question. For example, with `ask=how do I create an API token`, a goal like `automate deployments from our CI pipeline` lets GitBook tailor the answer to that use case.
+L353: The response will contain a direct answer to the question and relevant excerpts and sources from the documentation.
+L354: 
+L355: Use this mechanism when the answer is not explicitly present in the current page, you need clarification or additional context, or you want to retrieve related documentation sections.
+

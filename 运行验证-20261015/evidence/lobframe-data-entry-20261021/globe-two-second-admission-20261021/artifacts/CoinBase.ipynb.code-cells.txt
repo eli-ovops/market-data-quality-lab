@@ -1,0 +1,257 @@
+CELL 1
+%%capture
+!wget -O dataset.7z https://www.dropbox.com/sh/w3qagq2ze9noxon/AACE6f4nkBAJaJEc7Nbf2nhla/coinbase_btc_usd.7z?dl=0
+
+CELL 2
+%%capture
+!pip install pyunpack
+!pip install patool
+
+CELL 3
+from pyunpack import Archive
+
+CELL 4
+Archive('/content/dataset.7z').extractall("/content")
+
+CELL 5
+import os
+import pandas as pd
+import numpy as np
+%matplotlib inline
+import matplotlib.pyplot as plt
+import seaborn as sns
+import gc
+from tqdm import tqdm
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report
+
+CELL 6
+path_ = '/content/coinbase_btc_usd/coinbase/btc_usd/l2_snapshots/100ms/'
+
+CELL 7
+l2_snapshot = pd.read_parquet('/content/coinbase_btc_usd/coinbase/btc_usd/l2_snapshots/100ms/coinbase_btc_usd_l2_book_snapshots_depth50_2019_11_12_0000_0100.parquet')
+
+CELL 8
+l2_snapshot.head()
+
+CELL 9
+l2_snapshot.isnull().sum()
+
+CELL 10
+i = 0
+for x in os.listdir(path_):
+  #Remove the if part to load the full dataset
+  if i > 10:
+    break
+  else:
+    if i == 0:
+      l2_snapshot = pd.read_parquet('/content/coinbase_btc_usd/coinbase/btc_usd/l2_snapshots/100ms/coinbase_btc_usd_l2_book_snapshots_depth50_2019_11_12_0000_0100.parquet')
+    else:
+      temp = pd.read_parquet(path_+x)
+      l2_snapshot_ = l2_snapshot.copy()
+      l2_snapshot = pd.concat([l2_snapshot_, temp])
+      del temp
+      del l2_snapshot_
+      gc.collect()
+    i = i+1
+print('Memory Usage: {} MB'.format(l2_snapshot.memory_usage().sum()/(1024**2)))
+
+CELL 11
+print('Before dropping null values: {}'.format(l2_snapshot.shape))
+l2_snapshot.dropna(inplace=True)
+print('After dropping null values: {}'.format(l2_snapshot.shape))
+
+CELL 12
+# Function to generate the labels for learning according to the paper
+def generate_features_labels(df,ask, bid,k=20, alpha = 10e-5):
+  df_ = df.copy()
+  df_['mid_price'] = (df_[ask]+df_[bid])/2
+  df_['target'] = 1
+  index = df_.columns.get_loc('mid_price')
+  target_index = df_.columns.get_loc('target')
+  shape = df_.shape[0]
+  for i in tqdm(range(k,shape-k)):
+    m_b = np.mean(df_.iloc[(i-k):i, index].values)
+    m_a = np.mean(df_.iloc[i+1:(i+k+1), index].values)
+
+    if (m_b > m_a*(1+alpha)):
+      df_.iloc[i,target_index] = 2
+    if (m_b < m_a*(1-alpha)):
+      df_.iloc[i,target_index] = 0
+
+  y = df_.iloc[k:shape-k, target_index].values
+  X = df.iloc[k:shape-k,:].values
+  #Free up memory by deleting not required dataframes.
+  del df_
+  del df
+  gc.collect()
+  return X,y
+
+CELL 13
+X,y = generate_features_labels(l2_snapshot, ask='a1', bid = 'b1')
+
+CELL 14
+#Dimensions for the time series
+T = 100
+D = 200
+N = len(X) - T
+
+CELL 15
+trainPart = int(len(X)*0.7)  #(70% Data for training and 30% for testing)
+
+#Normalising the whole dataset
+
+scaler = StandardScaler()
+scaler.fit(X[:trainPart + T - 1])
+X = scaler.transform(X)
+
+CELL 16
+#Create the template structure of training set
+X_train = np.zeros((trainPart, T, D))
+y_train = np.zeros(trainPart)
+
+#Preparing the time series data using timestep of 100 and no of features = 200
+for t in range(trainPart):
+  X_train[t, :, :] = X[t:t+T]
+  y_train[t] = y[t+T] 
+
+# Reducing X_train datasize memory usage
+print('X_train - Before: {} GB'.format(X_train.nbytes/1024**3))
+X_train = X_train.astype('float16')
+print('X_train - After: {} GB'.format(X_train.nbytes/1024**3))
+
+# Reducing Y_train datasize memory usage
+print('y_train - before: {} MB'.format(y_train.nbytes/1024**2))
+y_train = y_train.astype('int')
+print('y_train - After: {} MB'.format(y_train.nbytes/1024**2))
+
+CELL 17
+#Create the template structure of test set
+X_test = np.zeros((N - trainPart, T, D))
+y_test = np.zeros(N - trainPart)
+
+#Preparing the time series data using timestep of 100 and no of features = 200
+for k in range(N - trainPart):
+  t = k + trainPart
+  X_test[k, :, :] = X[t:t+T]
+  y_test[k] = y[t+T]
+
+# Reducing X_test datasize memory usage
+print('X_test - Before {} GB'.format(X_test.nbytes/1024**3))
+X_test = X_test.astype('float16')
+print('X_test - After {} GB'.format(X_test.nbytes/1024**3))
+
+# Reducing Y_test datasize memory usage
+print('y_test - Before: {} MB'.format(y_test.nbytes/1024**2))
+y_test = y_test.astype('int')
+print('y_test - After: {} MB'.format(y_test.nbytes/1024**2))
+
+CELL 18
+# Install TensorFlow
+# !pip install -q tensorflow-gpu==2.0.0-beta1
+
+try:
+  %tensorflow_version 2.x  # Colab only.
+except Exception:
+  pass
+
+import tensorflow as tf
+print(tf.__version__)
+
+CELL 19
+from tensorflow.keras.layers import Input, Conv1D, Conv2D, Flatten, MaxPooling1D, MaxPooling2D, Dense, LeakyReLU
+from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import SGD, Adam
+
+CELL 20
+#Converting X_train and X_test for 2D Convolution
+X_train = np.expand_dims(X_train, -1)
+X_test = np.expand_dims(X_test, -1)
+
+CELL 21
+#Model architecture is as from the report
+#T = 100 from the above step for timesteps and D = 200 (no. of features) 
+i = Input(shape=X_train[0].shape)
+print(i)
+x = Conv2D(16, (4,D), activation=LeakyReLU(alpha=0.01))(i)
+print(x.shape)
+x = tf.keras.layers.Reshape(target_shape=(T-3,16))(x)
+print(x.shape)
+x = Conv1D(16, 4, activation=LeakyReLU(alpha=0.01))(x)
+x = MaxPooling1D(2)(x)
+x = Conv1D(32, 3, activation=LeakyReLU(alpha=0.01))(x)
+x = Conv1D(32, 3, activation=LeakyReLU(alpha=0.01))(x)
+x = MaxPooling1D(2)(x)
+x = Flatten()(x)
+x = Dense(32, activation=LeakyReLU(alpha=0.01))(x)
+x = Dense(3, activation='softmax')(x)
+
+model = Model(i,x)
+
+CELL 22
+#Printing Model Summary
+model.summary()
+
+CELL 23
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+#Accuracy is not a great metrics
+
+CELL 24
+from sklearn.utils.class_weight import compute_class_weight
+def compute_class_weights(y):
+    classes = np.unique(y)
+    class_weight = compute_class_weight("balanced", classes, y)
+    class_weights = dict(zip(classes, class_weight))
+    return class_weights
+
+CELL 25
+#computing class weights according to the percentage in training dataset
+class_weights = compute_class_weights(y_train)
+
+CELL 26
+EPOCHS = 50
+BATCH_SIZE = 16
+r = model.fit(
+  X_train, y_train,
+  batch_size=BATCH_SIZE,
+  epochs=EPOCHS,
+  validation_data=(X_test, y_test),
+  class_weight = class_weights
+)
+
+CELL 27
+sns.lineplot(x=range(1,EPOCHS+1),y=r.history['loss'])
+sns.lineplot(x=range(1,EPOCHS+1),y=r.history['val_loss'])
+plt.title('Model Cross Entropy Loss')
+plt.ylabel('Cross Entropy Loss')
+plt.xlabel('Epochs')
+plt.legend(['Training', 'Testing'], loc='upper left')
+
+CELL 28
+# Model is clearly overfitting as the training loss is decreasing but the testing loss is just increasing. The confusion matrix below gives better information
+
+CELL 29
+y_pred = model.predict(X_test).argmax(axis=1)
+
+CELL 30
+ model.predict(X_test)
+
+CELL 31
+# Plot confusion matrix
+from sklearn.metrics import confusion_matrix
+
+cm = confusion_matrix(y_pred=y_pred, y_true=y_test)
+    
+cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+    
+ax=sns.heatmap(cm, annot=True, xticklabels=[0,1,2], yticklabels=[0,1,2], cmap='Blues')
+ax.set_ylim(3.0, 0)
+plt.show()
+
+CELL 32
+#Print the classification report
+print(classification_report(y_true= y_test, y_pred = y_pred))
+
+CELL 33

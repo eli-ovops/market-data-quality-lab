@@ -1,0 +1,96 @@
+ (https://docs.lighter.xyz/)
+citeturn1534view0 [wordlim: 200] Crawled: today; Content type: text/plain; Source: open({"ref_id":"https://docs.lighter.xyz/","lineno":null}); Total lines: 9
+L0: > For the complete documentation index, see [llms.txt](https://docs.lighter.xyz/llms.txt). Markdown versions of documentation pages are available by appending `.md` to page URLs; this page is available as [Markdown](https://docs.lighter.xyz/about-lighter/introduction.md).
+L1: # Introduction
+L2: 
+L3: Lighter is a decentralized trading platform designed for security, scale, and performance in a zero-fee trading environment. It is the first exchange to offer verifiable order matching and liquidations while delivering performance comparable to traditional exchanges.
+L4: 
+L5: The Lighter platform is available at:
+L6: 
+L7: * <https://app.lighter.xyz/>
+L8: * [https://lighter.exchange/](https://lighter.exchange/trade/ETH)
+--------------------------------------------------------------------------------
+systemConfig (https://apidocs.lighter.xyz/)
+citeturn1534view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://apidocs.lighter.xyz/","lineno":null}); Redirected to URL: https://apidocs.lighter.xyz/reference/systemconfig; Total lines: 87
+L0: For AI agents: the docs index is at https://apidocs.lighter.xyz/llms.txt. Append .md to any documentation page URL to get its markdown version.
+L1: 
+L2: cite0†Jump to Content L3: 
+L4: cite1†Resources cite2†API Reference L5: 
+L6: v1.0
+L7: 
+L8: * * *
+L9: 
+L10: cite3†Log In L11: 
+L12: API Reference
+L13: 
+L14: cite3†Log In L15: 
+L16: systemConfig
+L17: 
+L18: Copy Page
+L19: # systemConfig
+L20: 
+L21: get
+L22: 
+L23: https://mainnet.zklighter.elliot.ai/api/v1/systemConfig
+L24: 
+L25: Get system config
+L26: 
+L27: Recent Requests
+L28: 
+L29: Log in to see full request history
+L30: 
+L31: Time  | Status  | User Agent  |
+L32: --- | --- | --- | ---
+L33: Retrieving recent requests…
+L34: 
+L35: Loading…
+L36: 
+L37: Responses
+L38: 
+L39: #
+L40: 
+L41: `` 200
+L42: 
+L43: A successful response.
+L44: #
+L45: 
+L46: `` 400
+L47: 
+L48: Bad request
+L49: 
+L50: Updated 6 months ago
+L51: 
+L52: * * *
+L53: 
+L54: cite4†status L55: 
+L56: Did this page help you?
+L57: 
+L58: Yes
+L59: 
+L60: No
+L61: 
+L62: Language
+L63: 
+L64: Shell Node Ruby PHP Python
+L65: 
+L66:     Loading…
+L67: 
+L68: Response
+L69: 
+L70: Click `Try It!` to start a request and see the response here! Or choose an example:
+L71: 
+L72: application/json
+L73: 
+L74: ``200``400
+L75: 
+L76: Updated 6 months ago
+L77: 
+L78: * * *
+L79: 
+L80: cite4†status L81: 
+L82: Did this page help you?
+L83: 
+L84: Yes
+L85: 
+L86: No
+

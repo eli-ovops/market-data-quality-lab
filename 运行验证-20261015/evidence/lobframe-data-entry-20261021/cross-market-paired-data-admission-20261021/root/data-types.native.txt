@@ -1,0 +1,272 @@
+ (https://docs.tardis.dev/downloadable-csv-files/data-types.md)
+citeturn1548view0 [wordlim: 200] Crawled: today; Content type: text/plain; Source: open({"ref_id":"https://docs.tardis.dev/downloadable-csv-files/data-types.md","lineno":100}); Total lines: 353
+L1: # Data Types
+L2: 
+L14: ## CSV format details
+L15: 
+L16: * columns delimiter: **, (comma)**
+L17: * new line marker: **\n (LF)**
+L18: * decimal mark: **. (dot)**
+L19: * date time format: **microseconds since epoch** (<https://www.epochconverter.com/>)
+L20: * date time timezone: **UTC**
+L21: ## incremental\_book\_L2
+L22: 
+L23: Incremental order book L2 updates collected from exchanges' [real-time WebSocket](/faq/data.md#why-data-source-matters-websocket-feeds-vs-rest-endpoints) order book L2 data feeds - data as deep and granular as underlying real-time data source, please see [FAQ: What is the maximum order book depth available for each supported exchange?](/faq/order-books.md#what-is-the-maximum-order-book-depth-available-for-each-supported-exchange) for more details.
+L24: {% hint style="info" %}
+L25: Learn in more detail [how incremental\_book\_l2 CSV dataset is built from real-time data](/faq/order-books.md#how-is-the-incremental_book_l2-csv-dataset-built-from-real-time-data).
+L26: {% endhint %}
+L27: 
+L28: As exchanges' real-time feeds usually publish multiple order book level updates in a single message, you can recognize that by grouping rows by the `local_timestamp` field if needed.
+L29: Files may contain non-snapshot updates before the first snapshot — skip these rows until you encounter the first `is_snapshot=true` row. These are buffered updates received before the exchange sent the initial snapshot after a connection restart.
+L30: {% hint style="info" %}
+L31: If you have any doubts about how to correctly reconstruct full order book state from the incremental\_book\_L2 CSV dataset, please [see this answer](/faq/order-books.md#how-can-i-reconstruct-full-order-book-state-from-incremental_book_l2-csv-dataset) or [contact us](https://tardis.dev/#contact).
+L32: In case you only need **order book data for top 25 or top 5 levels,** we provide datasets with already reconstructed snapshots for every update for those. See [book\_snapshot\_25](#book_snapshot_25) and [book\_snapshot\_5](#book_snapshot_5).
+L33: {% endhint %}
+L34: 
+L35: {% tabs %}
+L36: {% tab title="CSV incremental\_book\_L2  schema" %}
+L37: | column name      | description                                                                                                                                                                                                                                                                                                                                 |
+L38: | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+L39: | exchange         | exchange id, one of <https://api.tardis.dev/v1/exchanges> (`[].id` field)                                                                                                                                                                                                                                                                   |
+L40: | symbol           | instrument symbol as provided by exchange (always uppercase)                                                                                                                                                                                                                                                                                |
+L41: | timestamp        | timestamp provided by exchange in **microseconds since epoch** - if exchange does not provide one `local_timestamp` value is used as a fallback                                                                                                                                                                                             |
+L42: | local\_timestamp | message arrival timestamp in **microseconds since epoch**                                                                                                                                                                                                                                                                                   |
+L43: | is\_snapshot     | <p>possible values:<br><code>true</code> - if update was a part of initial order book snapshot<br><code>false</code> - if update <strong>was not</strong> a part of initial order book snapshot<br>If last update was not a snapshot and current one is, then existing order book state must be discarded (all existing levels removed)</p> |
+L44: | side             | <p>determines to which side of the order book update belongs to:<br><code>bid</code> - bid side of the book, buy orders<br><code>ask</code> - ask side of the book, sell orders</p>                                                                                                                                                         |
+L45: | price            | price identifying book level being updated                                                                                                                                                                                                                                                                                                  |
+L46: | amount           | updated price level amount as provided by exchange, **not a delta** - an amount of `0` indicates that the price level can be removed                                                                                                                                                                                                        |
+L47: | {% endtab %}     |                                                                                                                                                                                                                                                                                                                                             |
+L48: {% tab title="dataset preview" %}
+L49: | exchange      | symbol        | timestamp        | local\_timestamp | is\_snapshot | side | price  | amount |
+L50: | ------------- | ------------- | ---------------- | ---------------- | ------------ | ---- | ------ | ------ |
+L51: | deribit       | BTC-PERPETUAL | 1585699209920000 | 1585699209934201 | false        | ask  | 6443.5 | 38640  |
+L52: | deribit       | BTC-PERPETUAL | 1585699209947000 | 1585699209957629 | false        | bid  | 6311.5 | 0      |
+L53: | {% endtab %}  |               |                  |                  |              |      |        |        |
+L54: | {% endtabs %} |               |                  |                  |              |      |        |        |
+L55: {% embed url="<https://datasets.tardis.dev/v1/deribit/incremental_book_L2/2020/04/01/BTC-PERPETUAL.csv.gz>" %}
+L56: Deribit BTC-PERPETUAL incremental order book L2 updates for 2020-04-01
+L57: {% endembed %}
+L58: 
+L59: {% embed url="<https://datasets.tardis.dev/v1/deribit/incremental_book_L2/2020/09/01/FUTURES.csv.gz>" %}
+L60: Deribit FUTURES instruments incremental order book L2 updates for 2020-09-01
+L61: {% endembed %}
+L62: ## book\_snapshot\_25
+L63: 
+L64: Tick-level order book snapshots reconstructed from exchanges' [real-time WebSocket](/faq/data.md#why-data-source-matters-websocket-feeds-vs-rest-endpoints) order book L2 data feeds. Each row represents **top 25 levels** from each side of the limit order book and was recorded every time any of the tracked bids/asks top 25 levels changed.
+L65: {% hint style="info" %}
+L66: Book snapshots are reconstructed with crossed levels removed — if a bid price >= ask price appears in exchange data, the overlapping level is discarded. See [order book crossing FAQ](/faq/order-books.md#can-reconstructed-order-books-have-bid-ask-overlap) for details.
+L67: {% endhint %}
+L68: 
+L69: {% tabs %}
+L70: {% tab title="CSV book\_snapshot\_25 schema" %}
+L71: | column name                                                                                                                                 | description                                                                                                                                                                                            |
+L72: | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+L73: | exchange                                                                                                                                    | exchange id, one of <https://api.tardis.dev/v1/exchanges> (`[].id` field)                                                                                                                              |
+L74: | symbol                                                                                                                                      | instrument symbol as provided by exchange (always uppercase)                                                                                                                                           |
+L75: | timestamp                                                                                                                                   | timestamp provided by exchange in **microseconds since epoch** - if exchange does not provide one `local_timestamp` value is used as a fallback                                                        |
+L76: | local\_timestamp                                                                                                                            | message arrival timestamp in **microseconds since epoch**                                                                                                                                              |
+L77: | asks\[0].price, asks\[0].amount, bids\[0].price, bids\[0].amount, ..., asks\[24].price, asks\[24].amount, bids\[24].price, bids\[24].amount | top 25 levels interleaved per level: ask price, ask amount, bid price, bid amount for each level (0-24). Asks in ascending price order, bids in descending. Empty if there aren't enough price levels. |
+L78: | {% endtab %}                                                                                                                                |                                                                                                                                                                                                        |
+L79: {% tab title="dataset preview" %}
+L80: | exchange      | symbol        | timestamp        | local\_timestamp | asks\[0].price | asks\[0].amount | bids\[0].price | bids\[0].amount | asks\[1].price | asks\[1].amount | bids\[1].price | bids\[1].amount | ... |
+L81: | ------------- | ------------- | ---------------- | ---------------- | -------------- | --------------- | -------------- | --------------- | -------------- | --------------- | -------------- | --------------- | --- |
+L82: | deribit       | BTC-PERPETUAL | 1599868800206000 | 1599868800253274 | 10396          | 48050           | 10395.5        | 18220           | 10396.5        | 22220           | 10395          | 16570           | ... |
+L83: | deribit       | BTC-PERPETUAL | 1599868800280000 | 1599868800310441 | 10396          | 48050           | 10395.5        | 18220           | 10396.5        | 22220           | 10395          | 16570           | ... |
+L84: | {% endtab %}  |               |                  |                  |                |                 |                |                 |                |                 |                |                 |     |
+L85: | {% endtabs %} |               |                  |                  |                |                 |                |                 |                |                 |                |                 |     |
+L86: {% embed url="<https://datasets.tardis.dev/v1/bitmex/book_snapshot_25/2020/09/01/XBTUSD.csv.gz>" %}
+L87: BitMEX XBTUSD top 25 levels order book snapshots for 2020-09-01
+L88: {% endembed %}
+L89: 
+L90: {% embed url="<https://datasets.tardis.dev/v1/binance-futures/book_snapshot_25/2020/09/01/BTCUSDT.csv.gz>" %}
+L91: Binance USDS-M Futures BTCUSDT top 25 levels order book snapshots for 2020-09-01
+L92: {% endembed %}
+L93: ## book\_snapshot\_5
+L94: 
+L95: Tick-level order book snapshots reconstructed from exchanges' [real-time WebSocket](/faq/data.md#why-data-source-matters-websocket-feeds-vs-rest-endpoints) order book L2 data feeds. Each row represents **top 5 levels** from each side of the limit order book and was recorded every time any of the tracked bids/asks top 5 levels changed.
+L96: {% hint style="info" %}
+L97: Book snapshots are reconstructed with crossed levels removed — if a bid price >= ask price appears in exchange data, the overlapping level is discarded. See [order book crossing FAQ](/faq/order-books.md#can-reconstructed-order-books-have-bid-ask-overlap) for details.
+L98: {% endhint %}
+L99: 
+L100: {% tabs %}
+L101: {% tab title="CSV book\_snapshot\_5 schema" %}
+L102: | column name                                                                                                                             | description                                                                                                                                                                                          |
+L103: | --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+L104: | exchange                                                                                                                                | exchange id, one of <https://api.tardis.dev/v1/exchanges> (`[].id` field)                                                                                                                            |
+L105: | symbol                                                                                                                                  | instrument symbol as provided by exchange (always uppercase)                                                                                                                                         |
+L106: | timestamp                                                                                                                               | timestamp provided by exchange in **microseconds since epoch** - if exchange does not provide one `local_timestamp` value is used as a fallback                                                      |
+L107: | local\_timestamp                                                                                                                        | message arrival timestamp in **microseconds since epoch**                                                                                                                                            |
+L108: | asks\[0].price, asks\[0].amount, bids\[0].price, bids\[0].amount, ..., asks\[4].price, asks\[4].amount, bids\[4].price, bids\[4].amount | top 5 levels interleaved per level: ask price, ask amount, bid price, bid amount for each level (0-4). Asks in ascending price order, bids in descending. Empty if there aren't enough price levels. |
+L109: | {% endtab %}                                                                                                                            |                                                                                                                                                                                                      |
+L110: {% tab title="dataset preview" %}
+L111: | exchange      | symbol | timestamp        | local\_timestamp | asks\[0].price | asks\[0].amount | bids\[0].price | bids\[0].amount | asks\[1].price | asks\[1].amount | bids\[1].price | bids\[1].amount | asks\[2].price | asks\[2].amount | bids\[2].price | bids\[2].amount | asks\[3].price | asks\[3].amount | bids\[3].price | bids\[3].amount | asks\[4].price | asks\[4].amount | bids\[4].price | bids\[4].amount |
+L112: | ------------- | ------ | ---------------- | ---------------- | -------------- | --------------- | -------------- | --------------- | -------------- | --------------- | -------------- | --------------- | -------------- | --------------- | -------------- | --------------- | -------------- | --------------- | -------------- | --------------- | -------------- | --------------- | -------------- | --------------- |
+L113: | bitmex        | XBTUSD | 1598918402683390 | 1598918402683390 | 11658          | 1399982         | 11657.5        | 2293327         | 11658.5        | 82328           | 11657          | 37555           | 11659          | 3001            | 11656.5        | 110647          | 11659.5        | 10843           | 11656          | 10063           | 11660          | 2522            | 11655.5        | 4039            |
+L114: | bitmex        | XBTUSD | 1598918403229829 | 1598918403229829 | 11658          | 1399982         | 11657.5        | 2293327         | 11658.5        | 82328           | 11657          | 37555           | 11659          | 3001            | 11656.5        | 110647          | 11659.5        | 10835           | 11656          | 10063           | 11660          | 2522            | 11655.5        | 4039            |
+L115: | {% endtab %}  |        |                  |                  |                |                 |                |                 |                |                 |                |                 |                |                 |                |                 |                |                 |                |                 |                |                 |                |                 |
+L116: | {% endtabs %} |        |                  |                  |                |                 |                |                 |                |                 |                |                 |                |                 |                |                 |                |                 |                |                 |                |                 |                |                 |
+L117: {% embed url="<https://datasets.tardis.dev/v1/bitmex/book_snapshot_5/2020/09/01/XBTUSD.csv.gz>" %}
+L118: BitMEX XBTUSD top 5 levels order book snapshots for 2020-09-01
+L119: {% endembed %}
+L120: 
+L121: {% embed url="<https://datasets.tardis.dev/v1/binance-futures/book_snapshot_5/2020/09/01/BTCUSDT.csv.gz>" %}
+L122: Binance USDS-M Futures BTCUSDT top 5 levels order book snapshots for 2020-09-01
+L123: {% endembed %}
+L124: ## trades
+L125: 
+L126: Individual trades data collected from exchanges' [real-time WebSocket trades data feeds](/faq/data.md#why-data-source-matters-websocket-feeds-vs-rest-endpoints).
+L127: 
+L128: {% tabs %}
+L129: {% tab title="CSV trades schema" %}
+L130: | column name      | description                                                                                                                                                                                                                       |
+L131: | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+L132: | exchange         | exchange id, one of <https://api.tardis.dev/v1/exchanges> (`[].id` field)                                                                                                                                                         |
+L133: | symbol           | instrument symbol as provided by exchange (always uppercase)                                                                                                                                                                      |
+L134: | timestamp        | timestamp provided by exchange in **microseconds since epoch** - if exchange does not provide one `local_timestamp` value is used as a fallback                                                                                   |
+L135: | local\_timestamp | message arrival timestamp in **microseconds since epoch**                                                                                                                                                                         |
+L136: | id               | trade id as provided by exchange, empty if exchange does not provide one - different exchanges provide id's as numeric values, GUID's or other strings, and some do not provide that information at all                           |
+L137: | side             | <p>liquidity taker side (aggressor), possible values:<br><code>buy</code> - liquidity taker was buying<br><code>sell</code> - liquidity taker was selling<br><code>unknown</code> - exchange did not provide that information</p> |
+L138: | price            | trade price as provided by exchange                                                                                                                                                                                               |
+L139: | amount           | trade amount as provided by exchange                                                                                                                                                                                              |
+L140: | {% endtab %}     |                                                                                                                                                                                                                                   |
+L141: {% tab title="dataset preview" %}
+L142: | exchange      | symbol | timestamp        | local\_timestamp | id     | side | price  | amount |
+L143: | ------------- | ------ | ---------------- | ---------------- | ------ | ---- | ------ | ------ |
+L144: | bitmex        | XBTUSD | 1585699202957000 | 1585699203089980 | d20... | buy  | 6425.5 | 12     |
+L145: | bitmex        | XBTUSD | 1585699202980000 | 1585699203095276 | 619... | sell | 6425   | 150    |
+L146: | {% endtab %}  |        |                  |                  |        |      |        |        |
+L147: | {% endtabs %} |        |                  |                  |        |      |        |        |
+L148: {% embed url="<https://datasets.tardis.dev/v1/bitmex/trades/2020/03/01/XBTUSD.csv.gz>" %}
+L149: Bitmex XBTUSD trades for 2020-03-01 dataset sample
+L150: {% endembed %}
+L151: 
+L152: {% embed url="<https://datasets.tardis.dev/v1/okex-futures/trades/2020/03/01/FUTURES.csv.gz>" %}
+L153: OKX Futures FUTURES instruments trades for 2020-03-01 dataset sample
+L154: {% endembed %}
+L155: ## options\_chain
+L156: Tick-level options summary info (strike prices, expiration dates, open interest, implied volatility, greeks etc.) for all active options instruments collected from exchanges' [real-time WebSocket](/faq/data.md#why-data-source-matters-websocket-feeds-vs-rest-endpoints) options data feeds.
+L157: Options chain data is currently available for [Deribit](/historical-data-details/deribit.md), [OKX Options](/historical-data-details/okex-options.md), [Bybit Options](/historical-data-details/bybit-options.md), [Binance European Options](/historical-data-details/binance-european-options.md), [Bullish](/historical-data-details/bullish.md), [Kraken Futures](/historical-data-details/cryptofacilities.md), and [HTX Options](/historical-data-details/huobi-dm-options.md).
+L158: {% hint style="info" %}
+L159: For `options_chain` data type only ['OPTIONS' symbol](/downloadable-csv-files/overview.md#grouped-symbols) is available (one file per day for all options instruments).
+L160: {% endhint %}
+L161: 
+L162: {% tabs %}
+L163: {% tab title="CSV options\_chain schema" %}
+L164: | column name       | description                                                                   |
+L165: | ----------------- | ----------------------------------------------------------------------------- |
+L166: | exchange          | exchange id, one of <https://api.tardis.dev/v1/exchanges> (`[].id` field)     |
+L167: | symbol            | instrument symbol as provided by exchange (always uppercase)                  |
+L168: | timestamp         | ticker timestamp provided by exchange in **microseconds since epoch**         |
+L169: | local\_timestamp  | ticker message arrival timestamp in **microseconds since epoch**              |
+L170: | type              | <p>option type, possible values:<br><code>put</code><br><code>call</code></p> |
+L171: | strike\_price     | option strike price                                                           |
+L172: | expiration        | option expiration date in **microseconds since epoch**                        |
+L173: | open\_interest    | current open interest, empty if exchange does not provide one                 |
+L174: | last\_price       | price of the last trade, empty if there weren't any trades yet                |
+L175: | bid\_price        | current best bid price, empty if there aren't any bids                        |
+L176: | bid\_amount       | current best bid amount, empty if there aren't any bids                       |
+L177: | bid\_iv           | implied volatility for best bid, empty if there aren't any bids               |
+L178: | ask\_price        | current best ask price, empty if there aren't any asks                        |
+L179: | ask\_amount       | current best ask amount, empty if there aren't any asks                       |
+L180: | ask\_iv           | implied volatility for best ask, empty if there aren't any asks               |
+L181: | mark\_price       | mark price, empty if exchange does not provide one                            |
+L182: | mark\_iv          | implied volatility for mark price, empty if exchange does not provide one     |
+L183: | underlying\_index | underlying index name that option contract is based upon                      |
+L184: | underlying\_price | underlying price, empty if exchange does not provide one                      |
+L185: | delta             | delta value for the option, empty if exchange does not provide one            |
+L186: | gamma             | gamma value for the option, empty if exchange does not provide one            |
+L187: | vega              | vega value for the option, empty if exchange does not provide one             |
+L188: | theta             | theta value for the option, empty if exchange does not provide one            |
+L189: | rho               | rho value for the option, empty if exchange does not provide one              |
+L190: | {% endtab %}      |                                                                               |
+L191: {% tab title="dataset preview" %}
+L192: | exchange      | symbol            | timestamp        | local\_timestamp | type | strike\_price | expiration       | open\_interest | last\_price | bid\_price | bid\_amount | bid\_iv | ask\_price | ask\_amount | ask\_iv | mark\_price | mark\_iv | underlying\_index | underlying\_price | delta    | gamma   | vega    | theta     | rho      |
+L193: | ------------- | ----------------- | ---------------- | ---------------- | ---- | ------------- | ---------------- | -------------- | ----------- | ---------- | ----------- | ------- | ---------- | ----------- | ------- | ----------- | -------- | ----------------- | ----------------- | -------- | ------- | ------- | --------- | -------- |
+L194: | deribit       | BTC-9JUN20-9875-P | 1591574399413000 | 1591574400196008 | put  | 9875          | 1591689600000000 | 0.1            | 0.0295      | 0.0205     | 15.0        | 55.91   | 0.0235     | 15.0        | 68.94   | 0.02210436  | 62.89    | SYN.BTC-9JUN20    | 9756.36           | -0.61752 | 0.00103 | 2.24964 | -53.05655 | -0.22796 |
+L195: | deribit       | BTC-9JUN20-9875-P | 1591574404454000 | 1591574404473112 | put  | 9875          | 1591689600000000 | 0.1            | 0.0295      | 0.0205     | 15.0        | 55.91   | 0.0235     | 15.0        | 68.94   | 0.02209480  | 62.86    | SYN.BTC-9JUN20    | 9756.37           | -0.61757 | 0.00103 | 2.24954 | -53.02754 | -0.22798 |
+L196: | {% endtab %}  |                   |                  |                  |      |               |                  |                |             |            |             |         |            |             |         |             |          |                   |                   |          |         |         |           |          |
+L197: | {% endtabs %} |                   |                  |                  |      |               |                  |                |             |            |             |         |            |             |         |             |          |                   |                   |          |         |         |           |          |
+L198: {% embed url="<https://datasets.tardis.dev/v1/deribit/options_chain/2020/03/01/OPTIONS.csv.gz>" %}
+L199: Deribit options chain for 2020-03-01
+L200: {% endembed %}
+L201: 
+L202: {% embed url="<https://datasets.tardis.dev/v1/okex-options/options_chain/2020/03/01/OPTIONS.csv.gz>" %}
+L203: OKX options chain for 2020-03-01
+L204: {% endembed %}
+L205: ## quotes
+L206: 
+L207: Top of the book (best bid/ask) data reconstructed from exchanges' [real-time WebSocket](/faq/data.md#why-data-source-matters-websocket-feeds-vs-rest-endpoints) order book L2 data feeds, with best bid/ask recorded every time the top of the book changes.
+L208: We on purpose choose this solution over native exchanges real-time quotes feeds as those vary a lot between exchanges, can be throttled, some are absent at all, often are delayed and published in batches in comparison to more granular L2 updates which are the basis for our quotes dataset.
+L209: 
+L210: {% tabs %}
+L211: {% tab title="CSV quotes schema" %}
+L212: | column name      | description                                                                                                                                     |
+L213: | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+L214: | exchange         | exchange id, one of <https://api.tardis.dev/v1/exchanges> (`[].id` field)                                                                       |
+L215: | symbol           | instrument symbol as provided by exchange (always uppercase)                                                                                    |
+L216: | timestamp        | timestamp provided by exchange in **microseconds since epoch** - if exchange does not provide one `local_timestamp` value is used as a fallback |
+L217: | local\_timestamp | message arrival timestamp in **microseconds since epoch**                                                                                       |
+L218: | ask\_amount      | best ask amount as provided by exchange, empty if there aren't any asks                                                                         |
+L219: | ask\_price       | best ask price as provided by exchange, empty if there aren't any asks                                                                          |
+L220: | bid\_price       | best bid price as provided by exchange, empty if there aren't any bids                                                                          |
+L221: | bid\_amount      | best bid amount as provided by exchange, empty if there aren't any bids                                                                         |
+L222: | {% endtab %}     |                                                                                                                                                 |
+L223: {% tab title="dataset preview" %}
+L224: | exchange      | symbol  | timestamp        | local\_timestamp | ask\_amount | ask\_price | bid\_price | bid\_amount |
+L225: | ------------- | ------- | ---------------- | ---------------- | ----------- | ---------- | ---------- | ----------- |
+L226: | huobi-dm-swap | BTC-USD | 1585699201147000 | 1585699201270777 | 86          | 6423       | 6422.9     | 112         |
+L227: | huobi-dm-swap | BTC-USD | 1585699201175000 | 1585699201292111 | 86          | 6423       | 6422.9     | 114         |
+L228: | {% endtab %}  |         |                  |                  |             |            |            |             |
+L229: | {% endtabs %} |         |                  |                  |             |            |            |             |
+L230: {% embed url="<https://datasets.tardis.dev/v1/huobi-dm-swap/quotes/2020/05/01/BTC-USD.csv.gz>" %}
+L231: HTX Coin-M Perpetual BTC-USD quotes for 2020-05-01
+L232: {% endembed %}
+L233: 
+L234: {% embed url="<https://datasets.tardis.dev/v1/deribit/quotes/2020/05/01/OPTIONS.csv.gz>" %}
+L235: Deribit OPTIONS instruments quotes for 2020-05-01
+L236: {% endembed %}
+L237: ## book\_ticker
+L238: 
+L239: Top of the book (best bid/ask) data collected directly from exchanges' [real-time WebSocket](/faq/data.md#why-data-source-matters-websocket-feeds-vs-rest-endpoints) best bid/offer channels (e.g., Binance `bookTicker`, Bybit `orderbook.1`). Unlike [quotes](#quotes) which are derived from L2 order book data, `book_ticker` is sourced from the native exchange-provided WebSocket best bid/offer feed.
+L240: [See details](/faq/data.md#which-exchanges-support-book_ticker-data-type) which exchanges support it and since when.
+L241: 
+L242: {% tabs %}
+L243: {% tab title="CSV book\_ticker schema" %}
+L244: | column name      | description                                                                                                                                     |
+L245: | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+L246: | exchange         | exchange id, one of <https://api.tardis.dev/v1/exchanges> (`[].id` field)                                                                       |
+L247: | symbol           | instrument symbol as provided by exchange (always uppercase)                                                                                    |
+L248: | timestamp        | timestamp provided by exchange in **microseconds since epoch** - if exchange does not provide one `local_timestamp` value is used as a fallback |
+L249: | local\_timestamp | message arrival timestamp in **microseconds since epoch**                                                                                       |
+L250: | ask\_amount      | best ask amount, empty if there aren't any asks                                                                                                 |
+L251: | ask\_price       | best ask price, empty if there aren't any asks                                                                                                  |
+L252: | bid\_price       | best bid price, empty if there aren't any bids                                                                                                  |
+L253: | bid\_amount      | best bid amount, empty if there aren't any bids                                                                                                 |
+L254: | {% endtab %}     |                                                                                                                                                 |
+L255: {% tab title="dataset preview" %}
+L256: | exchange      | symbol  | timestamp        | local\_timestamp | ask\_amount | ask\_price | bid\_price | bid\_amount |
+L257: | ------------- | ------- | ---------------- | ---------------- | ----------- | ---------- | ---------- | ----------- |
+L258: | binance       | BTCUSDT | 1704067200002131 | 1704067200002131 | 2.79269     | 42283.59   | 42283.58   | 9.07348     |
+L259: | binance       | BTCUSDT | 1704067200009508 | 1704067200009508 | 2.79064     | 42283.59   | 42283.58   | 9.07348     |
+L260: | {% endtab %}  |         |                  |                  |             |            |            |             |
+L261: | {% endtabs %} |         |                  |                  |             |            |            |             |
+L262: {% embed url="<https://datasets.tardis.dev/v1/binance/book_ticker/2024/01/01/BTCUSDT.csv.gz>" %}
+L263: Binance BTCUSDT book ticker for 2024-01-01
+L264: {% endembed %}
+L265: ## derivative\_ticker
+L266: 
+L267: Derivative instrument ticker info (open interest, funding, mark price, index price) collected from exchanges' [real-time WebSocket](/faq/data.md#why-data-source-matters-websocket-feeds-vs-rest-endpoints) instruments & tickers data feeds.
+L268: 
+L269: Anytime any of the tracked values has changed data was added to final dataset.
+L270: Funding fields describe upcoming funding events relative to the message timestamp. `funding_timestamp` is the next funding event time: the immediately upcoming event, not a previously settled funding time. `funding_rate` is the rate for that next event and can change until the event occurs. `predicted_funding_rate`, when present, estimates the following funding event.
+L271: 
+L272: {% tabs %}
+L273: {% tab title="CSV derivative\_ticker schema" %}
+L274: | column name              | description                                                                                                                                                                                                                           |
+L275: | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+L276: | exchange                 | exchange id, one of <https://api.tardis.dev/v1/exchanges> (`[].id` field)                                                                                                                                                             |
+L277: | symbol                   | instrument symbol as provided by exchange (always uppercase)                                                                                                                                                                          |
+L278: | timestamp                | timestamp provided by exchange in **microseconds since epoch** - if exchange does not provide one `local_timestamp` value is used as a fallback                                                                                       |
+L279: | local\_timestamp         | message arrival timestamp in **microseconds since epoch**                                                                                                                                                                             |
+L280: | funding\_timestamp       | timestamp of the next funding event in **microseconds since epoch**, empty if exchange does not provide one                                                                                                                           |
+L281: | funding\_rate            | funding rate for the next funding event — this...

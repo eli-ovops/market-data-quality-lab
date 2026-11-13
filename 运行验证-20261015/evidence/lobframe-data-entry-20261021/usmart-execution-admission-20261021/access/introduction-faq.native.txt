@@ -1,0 +1,196 @@
+Introduction of Open API | uSMART (https://www.usmart.hk/mainland/zh-cn/docs/)
+citeturn1558view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://www.usmart.hk/mainland/zh-cn/docs/","lineno":null}); Total lines: 40
+L0:   * cite0†Introduction of Open API L1:     * cite1†How to apply Open API L2:     * cite2†Open API custom development L3:     * cite3†Open API account type L4:     * cite4†Communication channels L5:   * cite5†Introduction of OPEN API features L6:   * cite6†Basic Quotes Open API L7:   * cite7†Quote push access protocol L8:   * cite8†Trading Account Open API L9:   * cite9†Download Demo L10:   * cite10†TradingView and uSmart Automated Trading Tutorial L11: # cite11†# Introduction of Open API
+L12: 
+L13: uSMART Securities Open API can provide API services for individual and institutional investor, investors can make full use of uSMART Securities trading services, quotes services, account services and so on to achieve their own investment applications.
+L14: ## cite12†# How to apply Open API
+L15: 
+L16:   * Regular customers can apply through the following link：https://www.usmart.hk/zh-hk/open-api。
+L17: 
+L18:   * Due to limited service capabilities, the Open API service is only open to customers who have opened an account and have assets in uSMART Securities.
+L19: 
+L20:   * Using the Open API service to connect with uSMART Securities quotes requires programming foundation, and customers can consider whether to apply according to their own situation.
+L21: ## cite13†# Open API custom development
+L22: 
+L23: uSMART Securities also provides Open API custom development services, the cost depends on the development workload. For customers with high hardware requirements, uSMART Securities can also provide server rental.
+L24: ## cite14†# Open API account type
+L25: 
+L26: Open API account type is the same as the APP account type, and different account types enjoy different permissions, as follows:
+L27: 
+L28:   * Ordinary account: support U.S. stocks, Hong Kong stocks and A-share tradings, margin function supports some stocks, support option trading, account types include margin account and cash account, and orders can only be placed during trading hours.
+L29:   * PRO account: Support U.S. stocks, Hong Kong stocks and A-share tradings, account types include margin account and cash account, orders can be placed at any time, enjoy IPO privileges, investment advisory privileges and other services.
+L30: ## cite15†# Communication channels
+L31: 
+L32:   * Regular customers: You can join our official communication group, uSmart OpenAPI: 416089813(QQ group chat). This group is only used for OPEN-API questions to consult and answer questions, and updating documentation.
+L33: 
+L34: cite16†Image†web-static-prd-hongkong-1437675564.cos.accelerate.myqcloud.com L35: 
+L36:   * Note:
+L37:     1. The conditions for adding the group are: uSMART customers who have opened an account, for users who have not opened an account, we do not recommended to add the group. Add group question answer: intelligent investment platform 2.After adding the group, the group owner will add the corresponding note after the nickname of the group member, please do not change the note.
+L38: 
+L39: cite5†Introduction of OPEN API features →
+--------------------------------------------------------------------------------
+FAQ Details | Help Center | uSMART Securities (https://hk.usmartglobal.com/en/helpframe/199/detail/10851)
+citeturn1558view1 [wordlim: 200] Crawled: yesterday; Content type: text/html; Source: open({"ref_id":"https://hk.usmartglobal.com/en/helpframe/199/detail/10851","lineno":null}); Total lines: 229
+L0: cite0†iframe†www.googletagmanager.com L1: 
+L2: You are browsing the Hong Kong website, Regulated by Hong Kong SFC (CE number: BJA907). Investment is risky and you must be cautious when entering the market.
+L3: 
+L4: Trading
+L5: 
+L6: cite1†US Stock L7: 
+L8: cite2†HK Stock L9: 
+L10: cite3†ETF L11: 
+L12: cite4†US Stock Options L13: 
+L14: cite5†US Stock Pre-Market Option Trading L15: 
+L16: cite6†Funds L17: 
+L18: cite7†US Fractional Shares L19: 
+L20: cite8†Bonds L21: 
+L22: cite9†A Stock L23: 
+L24: cite10†Margin Account L25: 
+L26: cite11†IPO L27: 
+L28: cite12†Futures L29: 
+L30: cite13†Structured Notes†yxzq.udesk.cn L31: 
+L32: Market
+L33: 
+L34: cite14†Stock Quotes L35: 
+L36: cite15†Institutions L37: 
+L38: Fees
+L39: cite16†Service Fees L40: 
+L41: cite17†Quote Services L42: 
+L43: cite18†Promotions L44: 
+L45: cite19†Help Center L46: 
+L47: uSMARTPORT
+L48: 
+L49: cite20†Investment Courses L50: 
+L51: cite21†Market News L52: 
+L53: cite22†Seminar L54: 
+L55: Download
+L56: 
+L57: cite23†Download uSMART APP L58: 
+L59: cite24†Download Futures APP L60: 
+L61: About
+L62: 
+L63: cite25†About us L64: 
+L65: cite26†Important Notice L66: 
+L67: cite27†Join Us L68: 
+L69: Hong Kong
+L70: 
+L71: Hong Kong
+L72: 
+L73: cite28†Singapore†sg.usmartglobal.com cite29†United States†www.usmartcapital.com cite30†Group†www.usmartgroup.com L74: 
+L75: EN
+L76: 
+L77: cite19†繁體中文 cite31†简体中文 cite32†English L78: 
+L79: cite33†Login/Register L80: 
+L81: English
+L82: 
+L83: cite19†繁體中文 cite31†简体中文 cite32†English L84: 
+L85: Hong Kong
+L86: Hong Kong
+L87: 
+L88: cite28†Singapore†sg.usmartglobal.com cite29†United States†www.usmartcapital.com cite30†Group†www.usmartgroup.com L89: 
+L90: Trading
+L91: 
+L92: cite1†US Stock L93: 
+L94: cite2†HK Stock L95: 
+L96: cite3†ETF L97: 
+L98: cite4†US Stock Options L99: 
+L100: cite5†US Stock Pre-Market Option Trading L101: 
+L102: cite6†Funds L103: 
+L104: cite7†US Fractional Shares L105: 
+L106: cite8†Bonds L107: 
+L108: cite9†A Stock L109: 
+L110: cite10†Margin Account L111: 
+L112: cite11†IPO L113: 
+L114: cite12†Futures L115: 
+L116: cite13†Structured Notes†yxzq.udesk.cn L117: 
+L118: Market
+L119: 
+L120: cite14†Stock Quotes L121: 
+L122: cite15†Institutions L123: 
+L124: Fees
+L125: 
+L126: cite16†Service Fees L127: 
+L128: cite17†Quote Services L129: 
+L130: cite18†Promotions L131: 
+L132: cite19†Help Center L133: 
+L134: uSMARTPORT
+L135: cite20†Investment Courses L136: 
+L137: cite21†Market News L138: 
+L139: cite22†Seminar L140: 
+L141: Download
+L142: 
+L143: cite23†Download uSMART APP L144: 
+L145: cite24†Download Futures APP L146: 
+L147: About
+L148: 
+L149: cite25†About us L150: 
+L151: cite26†Important Notice L152: 
+L153: cite27†Join Us L154: uSmart Securities Limited is a corporation licensed by the Hong Kong Securities and Futures Commission (CE No.: BJA907) and is authorised to carry on Type 1 (Dealing in Securities), Type 2 (Dealing in Futures Contracts), Type 4 (Advising on Securities), Type 5 (Advising on Futures Contracts), Type 6 (Advising on Corporate Finance) and Type 9 (Asset Management) regulated activities.
+L155: 
+L156: cite33†Login/Register L157: 
+L158: [Input: Search]
+L159: 
+L160:   * cite34†Open API L161:   * cite35†Developer Documentation L162: ### Open API FAQ
+L163: 
+L164:   1. Type of Transaction
+L165: 
+L166: Type: Stock (HK Stock/US Stock/A-Share)
+L167: 
+L168: Quote Service: US Stock/HK Stock/A-Share)
+L169: 
+L170: Order: Enhanced limited orders, limited orders, at-auction orders, conditional orders
+L171: 
+L172: 
+L173: 
+L174:   2. System Structure
+L175: 
+L176: uSMART Securities API provides provide tremendous services through HTTP interface.
+L177: 
+L178: Most API functions can be accessed by simple HTTP POST requests. It also provides a long link interface (implemented using the http protocol or WebSocket protocol)
+L179: 
+L180: 
+L181: 
+L182:   3. License
+L183: Users need to apply and provide necessary information for the opening permission for using the open platform interface. Authorized users can access the relevant interface through the docking number and SSL key which login related operations will not be needed.
+L184: 
+L185: 
+L186: 
+L187:   4. Agreement
+L188: 
+L189: Agreements signed by developers and users: API authorization agreement - The system will request developer to sign an API agreement.
+L190: 
+L191: 
+L192: 
+L193:   5. What is the application threshold?
+L194: Currently, uSMART Securities currently has no threshold on customer assets and transaction frequency. It may be adjusted according to business development in the future.
+L195: 
+L196: 
+L197: 
+L198:   6. What programming languages ​​does Open API support?
+L199: 
+L200: No restrictions on programming language.
+L201: 
+L202: 
+L203: 
+L204:   7. What types of information does open API Provided? For example, stock information, instant or historical quote?
+L205: Tentative: Customers with ordinary account provide 200 candlestick chart data of 10 stocks while PRO account provide 200 historical candlestick chart data of 50 stocks. Customers can communicate with the account manager for any special needs. It may be adjusted according to business development in the future.
+L206: 
+L207: cite36†Business Collaboration cite33†Register now L208: ### Services
+L209: 
+L210: cite16†Fees cite19†FAQ cite37†Exclusive Trading Tools L211: 
+L212: ### About Us
+L213: 
+L214: cite25†Overview cite36†Contact Us cite38†Media Center L215: ### Agreement Statement
+L216: 
+L217: cite39†Disclaimer cite40†Privacy Statement L218: 
+L219: CS Hotline: +852 3018 4526
+L220: 
+L221: Trading days: 24 hours | Non-trading days: 9:00-18:00
+L222: 
+L223: Email: [REDACTED_EMAIL]
+L224: 
+L225: WhatsApp: +852 5989 2641
+L226: uSmart Securities Limited is a corporation licensed by the Hong Kong Securities and Futures Commission (CE No.: BJA907) and is authorised to carry on Type 1 (Dealing in Securities), Type 2 (Dealing in Futures Contracts), Type 4 (Advising on Securities), Type 5 (Advising on Futures Contracts), Type 6 (Advising on Corporate Finance) and Type 9 (Asset Management) regulated activities.
+L227: 
+L228: Please login first
+

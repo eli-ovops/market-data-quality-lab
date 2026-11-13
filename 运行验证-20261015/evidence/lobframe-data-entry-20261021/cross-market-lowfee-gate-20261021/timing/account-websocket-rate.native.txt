@@ -1,0 +1,623 @@
+Account Types (https://apidocs.lighter.xyz/docs/account-types)
+citeturn1537view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://apidocs.lighter.xyz/docs/account-types","lineno":null}); Total lines: 184
+L0: For AI agents: the docs index is at https://apidocs.lighter.xyz/llms.txt. Append .md to any documentation page URL to get its markdown version.
+L1: 
+L2: cite0†Jump to Content L3: 
+L4: cite1†Resources cite2†API Reference L5: 
+L6: v1.0
+L7: 
+L8: * * *
+L9: 
+L10: cite3†Log In L11: 
+L12: Resources
+L13: 
+L14: cite3†Log In L15: 
+L16: Account Types
+L17: # Account Types
+L18: 
+L19: Lighter API users can operate under a Standard, Plus or Premium/Advanced account.
+L20: 
+L21: > 📘
+L22: >
+L23: > Binary options fees use separate volume and LIT staking tiers. Fetch them through cite4†feeTiers with `filter=bo`; read the account's `bo_fee_rate` from cite5†accountLimits . The trading-fee tables below do not determine binary options fees. See cite6†Binary options: Trading and fees .
+L24: ####
+L25: 
+L26: Premium/Advanced Account (Opt-in) -- Suitable for HFT, the lowest latency on Lighter. Part of cite7†volume quota program .
+L27: 
+L28: Latency for maker & cancel orders is 0ms. Fee credits also count as staked LIT for the parameters described in the table.
+L29: Staked LIT  | sendTx/sendTxBatch per minute  | Maker/Taker Fee Discount  | Maker Fee  | Taker Fee  | Taker Latency  | Sub-accounts
+L30: --- | --- | --- | --- | --- | --- | ---
+L31: 0  | 4000  |  | 0.0040%  | 0.0280%  | 140 ms  | 64
+L32: 1,000  | 5000  | 2.5%  | 0.0039%  | 0.0273%  | 140 ms  | 64
+L33: 3,000  | 6000  | 5%  | 0.0038%  | 0.0266%  | 140 ms  | 64
+L34: 10,000  | 7000  | 10%  | 0.0036%  | 0.0252%  | 140 ms  | 64
+L35: 30,000  | 8000  | 15%  | 0.0034%  | 0.0238%  | 140 ms  | 64
+L36: 100,000  | 12000  | 20%  | 0.0032%  | 0.0224%  | 140 ms  | 64
+L37: 300,000  | 24000  | 25%  | 0.0030%  | 0.0210%  | 140 ms  | 64
+L38: 500,000  | 72000  | 30%  | 0.0028%  | 0.0196%  | 140 ms  | 64
+L39: ####
+L40: 
+L41: Plus Account (Opt-in) -- Suitable for latency-insensitive users, looking to get increased rate limits.
+L42: 
+L43: Access via the cite8†changeAccountTier endpoint.
+L44: 
+L45: Maker/Taker Fee  | Taker Latency  | Cancel/Modify Latency  | Maker Latency  | sendTx/sendTxBatch per minute  | Read-only weighted requests per minute  | Sub-accounts
+L46: --- | --- | --- | --- | --- | --- | ---
+L47: 0.005%  | 300 ms  | 300 ms  | 0ms  | 4000  | 24000  | 16
+L48: ####
+L49: 
+L50: Standard Account (Default) -- Suitable for retail and latency-insensitive traders.
+L51: 
+L52: Maker Fee  | Taker Fee  | Taker Latency  | Cancel/Modify Latency  | Maker Latency  | Sub-accounts
+L53: --- | --- | --- | --- | --- | ---
+L54: 0%  | 0%  | 300 ms  | 300 ms  | 0ms  | 4
+L55: 
+L56: For standard accounts only, TWAP orders charge a 1bps fee.
+L57: ####
+L58: 
+L59: Account Switch
+L60: 
+L61: You can change your Account Type (tied to your L1 address) using the cite8†`/changeAccountTier` endpoint.
+L62: 
+L63: You may call that endpoint if at least 24 hours have passed since the last call. To upgrade account type, there is no cooldown.
+L64: 
+L65: Python snippet to switch tiers:
+L66: [Button: Python: switch to Premium/Advanced][Button: Python: switch to standard]
+L67: 
+L68:     `import asyncio
+L69:     import logging
+L70:     import lighter
+L71:     import requests
+L72: 
+L73:     logging.basicConfig(level=logging.DEBUG)
+L74: 
+L75:     BASE_URL = "https://mainnet.zklighter.elliot.ai"
+L76: 
+L77:     # You can get the values from the system_setup.py script
+L78:     # API_KEY_PRIVATE_KEY =
+L79:     # ACCOUNT_INDEX =
+L80:     # API_KEY_INDEX =
+L81: 
+L82: 
+L83:     async def main():
+L84:         client = lighter.SignerClient(
+L85:             url=BASE_URL,
+L86:             private_key=API_KEY_PRIVATE_KEY,
+L87:             account_index=ACCOUNT_INDEX,
+L88:             api_key_index=API_KEY_INDEX,
+L89:         )
+L90: 
+L91:         err = client.check_client()
+L92:         if err is not None:
+L93:             print(f"CheckClient error: {err}")
+L94:             return
+L95: 
+L96:         auth, err = client.create_auth_token_with_expiry(
+L97:             lighter.SignerClient.DEFAULT_10_MIN_AUTH_EXPIRY
+L98:         )
+L99: 
+L100:         response = requests.post(
+L101:             f"{BASE_URL}/api/v1/changeAccountTier",
+L102:             data={"account_index": ACCOUNT_INDEX, "new_tier": "premium"},
+L103:             headers={"Authorization": auth},
+L104:         )
+L105:         if response.status_code != 200:
+L106:             print(f"Error: {response.text}")
+L107:             return
+L108:         print(response.json())
+L109: 
+L110: 
+L111:     if __name__ == "__main__":
+L112:         asyncio.run(main())`
+L113: 
+L114:     `import asyncio
+L115:     import logging
+L116:     import lighter
+L117:     import requests
+L118: 
+L119:     logging.basicConfig(level=logging.DEBUG)
+L120:     BASE_URL = "https://mainnet.zklighter.elliot.ai"
+L121: 
+L122:     # You can get the values from the system_setup.py script
+L123:     # API_KEY_PRIVATE_KEY =
+L124:     # ACCOUNT_INDEX =
+L125:     # API_KEY_INDEX =
+L126: 
+L127: 
+L128:     async def main():
+L129:         client = lighter.SignerClient(
+L130:             url=BASE_URL,
+L131:             private_key=API_KEY_PRIVATE_KEY,
+L132:             account_index=ACCOUNT_INDEX,
+L133:             api_key_index=API_KEY_INDEX,
+L134:         )
+L135: 
+L136:         err = client.check_client()
+L137:         if err is not None:
+L138:             print(f"CheckClient error: {err}")
+L139:             return
+L140: 
+L141:         auth, err = client.create_auth_token_with_expiry(
+L142:             lighter.SignerClient.DEFAULT_10_MIN_AUTH_EXPIRY
+L143:         )
+L144: 
+L145:         response = requests.post(
+L146:             f"{BASE_URL}/api/v1/changeAccountTier",
+L147:             data={"account_index": ACCOUNT_INDEX, "new_tier": "standard"},
+L148:             headers={"Authorization": auth},
+L149:         )
+L150:         if response.status_code != 200:
+L151:             print(f"Error: {response.text}")
+L152:             return
+L153:         print(response.json())
+L154: 
+L155: 
+L156:     if __name__ == "__main__":
+L157:         asyncio.run(main())`
+L158: ####
+L159: 
+L160: How fees are collected:
+L161: 
+L162: In isolated margin, fees are taken from the isolated position itself, but if needed, we automatically transfer from cross margin to keep the position healthy. In cross margin, fees are always deducted directly from the available cross balance.
+L163: 
+L164: Sub-accounts share the same tier as the main L1 address on the account.
+L165: 
+L166: Updated 3 days ago
+L167: 
+L168: * * *
+L169: 
+L170: cite9†Rate Limits cite7†Volume Quota L171: 
+L172: Did this page help you?
+L173: 
+L174: Yes
+L175: 
+L176: No
+L177: 
+L178: Copy Page
+L179:   *     * cite10†Premium/Advanced Account (Opt-in) -- Suitable for HFT, the lowest latency on Lighter. Part of volume quota program. L180:     * cite11†Plus Account (Opt-in) -- Suitable for latency-insensitive users, looking to get increased rate limits. L181:     * cite12†Standard Account (Default) -- Suitable for retail and latency-insensitive traders. L182:     * cite13†Account Switch L183:     * cite14†How fees are collected: --------------------------------------------------------------------------------
+WebSocket (https://apidocs.lighter.xyz/docs/websocket-reference)
+citeturn1537view1 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://apidocs.lighter.xyz/docs/websocket-reference","lineno":null}); Total lines: 1925
+L0: For AI agents: the docs index is at https://apidocs.lighter.xyz/llms.txt. Append .md to any documentation page URL to get its markdown version.
+L1: 
+L2: cite0†Jump to Content L3: 
+L4: cite1†Resources cite2†API Reference L5: 
+L6: v1.0
+L7: 
+L8: * * *
+L9: 
+L10: cite3†Log In L11: 
+L12: Resources
+L13: 
+L14: cite3†Log In L15: 
+L16: WebSocket
+L17: 
+L18: # WebSocket
+L19: 
+L20: This page will help you get started with zkLighter WebSocket server.
+L21: #
+L22: 
+L23: Connection
+L24: 
+L25: URL: `wss://mainnet.zklighter.elliot.ai/stream`; `wss://testnet.zklighter.elliot.ai/stream`
+L26: 
+L27: You can directly connect to the WebSocket server using wscat:
+L28: 
+L29: [Button: Shell]
+L30: 
+L31:     `wscat -c 'wss://mainnet.zklighter.elliot.ai/stream'`
+L32: 
+L33: If you're connecting from a restricted region, you can still access read-only data:
+L34: 
+L35: [Button: Shell]
+L36: 
+L37:     `wscat -c 'wss://mainnet.zklighter.elliot.ai/stream?readonly=true'`
+L38: #
+L39: 
+L40: Keepalive Requirements
+L41: 
+L42: Clients are responsible for keeping the connection alive by sending at least one frame every 2 minutes. This can be either:
+L43: 
+L44:   * A WebSocket ping frame
+L45:   * Any application-level message
+L46: 
+L47: Clients sending `{"type":"ping"}` will receive back `{"type":"pong"}`.
+L48: 
+L49: If the server receives no frames from a client within the 2-minute window, it will close the connection.
+L50: 
+L51: Support for `permessage-deflate` compression is enabled.
+L52: Clients that fall behind on reading messages may be disconnected more aggressively than before.
+L53: #
+L54: 
+L55: Send Tx
+L56: 
+L57: You can send transactions using the websocket as follows:
+L58: 
+L59: [Button: JSON]
+L60: 
+L61:     `{
+L62:         "type": "jsonapi/sendtx",
+L63:         "data": {
+L64:             "id": STRING, // returned in the ws response
+L65:             "tx_type": INTEGER,
+L66:             "tx_info": ...
+L67:         }
+L68:     }`
+L69: 
+L70: The tx_type options can be found in the cite4†SignerClient†github.com file, while tx_info can be generated using the sign methods in the SignerClient.
+L71: 
+L72: Example: cite5†ws_send_tx.py†github.com L73: #
+L74: 
+L75: Send Batch Tx
+L76: 
+L77: You can send batch transactions to execute up to 15 transactions in a single message.
+L78: 
+L79: [Button: JSON]
+L80: 
+L81:     `{
+L82:         "type": "jsonapi/sendtxbatch",
+L83:         "data": {
+L84:             "id": STRING, // returned in the ws response
+L85:             "tx_types": "[INTEGER]",
+L86:             "tx_infos": "[tx_info]"
+L87:         }
+L88:     }`
+L89: 
+L90: The tx_type options can be found in the cite4†SignerClient†github.com file, while tx_info can be generated using the sign methods in the SignerClient.
+L91: Example: cite6†ws_send_batch_tx.py†github.com L92: #
+L93: 
+L94: Types
+L95: 
+L96: We first need to define some types that appear often in the JSONs.
+L97: ##
+L98: 
+L99: Transaction JSON
+L100: 
+L101: To decode `event_info`, you can refer to cite7†Data Structures .
+L102: [Button: JSON]
+L103: 
+L104:     `Transaction = {
+L105:         "hash": STRING,
+L106:         "type": INTEGER,
+L107:         "info": STRING,                // json object as string, attributes depending on the tx type
+L108:         "event_info": STRING,          // json object as string, attributes depending on the tx type
+L109:         "status": INTEGER,
+L110:         "transaction_index": INTEGER,
+L111:         "l1_address": STRING,
+L112:         "account_index": INTEGER,
+L113:         "nonce": INTEGER,
+L114:         "expire_at": INTEGER,
+L115:         "block_height": INTEGER,
+L116:         "queued_at": INTEGER,
+L117:         "executed_at": INTEGER,
+L118:         "sequence_index": INTEGER,
+L119:         "parent_hash": STRING,
+L120:         "api_key_index": INTEGER,
+L121:         "transaction_time": INTEGER
+L122:     }`
+L123: Example:
+L124: [Button: JSON]
+L125: 
+L126:     `{
+L127:         "hash": "0xabc123456789def",
+L128:         "type": 15,
+L129:         "info": "{\"AccountIndex\":1,\"ApiKeyIndex\":2,\"MarketIndex\":3,\"Index\":404,\"ExpiredAt\":1700000000000,\"Nonce\":1234,\"Sig\":\"0xsigexample\"}",
+L130:         "event_info": "{\"a\":1,\"i\":404,\"u\":123,\"ae\":\"\"}",
+L131:         "status": 2,
+L132:         "transaction_index": 10,
+L133:         "l1_address": "0x123abc456def789",
+L134:         "account_index": 101,
+L135:         "nonce": 12345,
+L136:         "expire_at": 1700000000000,
+L137:         "block_height": 1500000,
+L138:         "queued_at": 1699999990000,
+L139:         "executed_at": 1700000000005,
+L140:         "sequence_index": 5678,
+L141:         "parent_hash": "0xparenthash123456",
+L142:         "api_key_index": 2,
+L143:         "transaction_time": 1700000000005000
+L144:     }`
+L145: Used in: cite8†Account Tx .
+L146: ##
+L147: 
+L148: Order JSON
+L149: [Button: JSON]
+L150: 
+L151:     `Order = {
+L152:         "order_index": INTEGER,
+L153:         "client_order_index": INTEGER,
+L154:         "order_id": STRING, // same as order_index but string
+L155:         "client_order_id": STRING, // same as client_order_index but string
+L156:         "market_index": INTEGER,
+L157:         "owner_account_index": INTEGER,
+L158:         "initial_base_amount": STRING,
+L159:         "price": STRING,
+L160:         "nonce": INTEGER,
+L161:         "remaining_base_amount": STRING,
+L162:         "is_ask": BOOLEAN,
+L163:         "base_size": INTEGER,
+L164:         "base_price": INTEGER,
+L165:         "filled_base_amount": STRING,
+L166:         "filled_quote_amount": STRING,
+L167:         "side": STRING,
+L168:         "type": "limit" | "market" | "stop-loss" | "stop-loss-limit" | "take-profit" | "take-profit-limit" | "twap" | "twap-sub" | "liquidation",
+L169:         "time_in_force": "good-till-time" | "immediate-or-cancel" | "post-only" | "Unknown",
+L170:         "reduce_only": BOOLEAN,
+L171:         "trigger_price": STRING,
+L172:         "order_expiry": INTEGER,
+L173:         "status": "in-progress" | "pending" | "open" | "filled" | "canceled" | "canceled-post-only" | "canceled-reduce-only" | "canceled-position-not-allowed" | "canceled-margin-not-allowed" | "canceled-too-much-slippage" | "canceled-not-enough-liquidity" | "canceled-self-trade" | "canceled-expired" | "canceled-oco" | "canceled-child" | "canceled-liquidation" | "canceled-invalid-balance",
+L174:         "trigger_status": "na" | "ready" | "mark-price" | "twap" | "parent-order",
+L175:         "trigger_time": INTEGER,
+L176:         "parent_order_index": INTEGER,
+L177:         "parent_order_id": STRING,
+L178:         "to_trigger_order_id_0": STRING,
+L179:         "to_trigger_order_id_1": STRING,
+L180:         "to_cancel_order_id_0": STRING,
+L181:         "integrator_fee_collector_index": STRING,
+L182:         "integrator_taker_fee": STRING,
+L183:         "integrator_maker_fee": STRING,
+L184:         "block_height": INTEGER,
+L185:         "timestamp": INTEGER,
+L186:         "created_at": INTEGER,
+L187:         "updated_at": INTEGER,
+L188:         "transaction_time": INTEGER
+L189:     }`
+L190: Used in: cite9†Account Market , cite10†Account All Orders , cite11†Account Orders .
+L191: ##
+L192: 
+L193: Trade JSON
+L194: [Button: JSON]
+L195: 
+L196:     `Trade = {
+L197:         "trade_id": INTEGER,
+L198:         "trade_id_str": STRING,
+L199:         "tx_hash": STRING,
+L200:         "type": "trade" | "liquidation" | "deleverage" | "market-settlement",
+L201:         "market_id": INTEGER,
+L202:         "size": STRING,
+L203:         "price": STRING,
+L204:         "usd_amount": STRING,
+L205:         "ask_id": INTEGER,
+L206:         "ask_id_str": STRING,
+L207:         "bid_id": INTEGER,
+L208:         "bid_id_str": STRING,
+L209:         "ask_client_id": INTEGER,
+L210:         "ask_client_id_str": STRING,
+L211:         "bid_client_id": INTEGER,
+L212:         "bid_client_id_str": STRING,
+L213:         "ask_account_id": INTEGER,
+L214:         "bid_account_id": INTEGER,
+L215:         "is_maker_ask": BOOLEAN,
+L216:         "block_height": INTEGER,
+L217:         "timestamp": INTEGER,
+L218:         "taker_fee": INTEGER,                              // omitempty
+L219:         "taker_position_size_before": STRING,               // omitempty
+L220:         "taker_entry_quote_before": STRING,                 // omitempty
+L221:         "taker_initial_margin_fraction_before": INTEGER,    // omitempty
+L222:         "taker_position_sign_changed": BOOLEAN,             // omitempty
+L223:         "maker_fee": INTEGER,                               // omitempty
+L224:         "maker_position_size_before": STRING,               // omitempty
+L225:         "maker_entry_quote_before": STRING,                 // omitempty
+L226:         "maker_initial_margin_fraction_before": INTEGER,    // omitempty
+L227:         "maker_position_sign_changed": BOOLEAN,             // omitempty
+L228:         "transaction_time": INTEGER,
+L229:     }`
+L230: Example:
+L231: [Button: JSON]
+L232: 
+L233:     `{
+L234:         "trade_id":[REDACTED_PHONE],
+L235:         "trade_id_str":"[REDACTED_PHONE]",
+L236:         "tx_hash":"019f2b9c9cc609196316a569541e135a739728e0837fcfb05c913534e305e503c01d5dcfeabeaf81",
+L237:         "type":"trade",
+L238:         "market_id":0,
+L239:         "size":"0.1336",
+L240:         "price":"2181.83",
+L241:         "usd_amount":"291.492488",
+L242:         "ask_id":281476612587355,
+L243:         "ask_id_str":"281476612587355",
+L244:         "bid_id":562948334068259,
+L245:         "bid_id_str":"562948334068259",
+L246:         "ask_client_id":363283,
+L247:         "ask_client_id_str":"363283",
+L248:         "bid_client_id":23004521241,
+L249:         "bid_client_id_str":"23004521241",
+L250:         "ask_account_id":57890,
+L251:         "bid_account_id":317068,
+L252:         "is_maker_ask":false,
+L253:         "block_height":198321831,
+L254:         "timestamp":1773854156654,
+L255:         "taker_position_size_before":"80.5467",
+L256:         "taker_entry_quote_before":"178806.039128",
+--------------------------------------------------------------------------------
+Rate Limits (https://apidocs.lighter.xyz/docs/rate-limits)
+citeturn1537view2 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://apidocs.lighter.xyz/docs/rate-limits","lineno":null}); Total lines: 208
+L0: For AI agents: the docs index is at https://apidocs.lighter.xyz/llms.txt. Append .md to any documentation page URL to get its markdown version.
+L1: 
+L2: cite0†Jump to Content L3: 
+L4: cite1†Resources cite2†API Reference L5: 
+L6: v1.0
+L7: 
+L8: * * *
+L9: 
+L10: cite3†Log In L11: 
+L12: Resources
+L13: 
+L14: cite3†Log In L15: 
+L16: Rate Limits
+L17: # Rate Limits
+L18: 
+L19: We enforce rate limits on both REST API and WebSocket usage. These limits apply to both IP address and L1 address. It's important to note that for non-standard account types, sendTx and sendTxBatch fall into a separate rate limit bucket cite4†described below , and are cite5†linked to account type and staked tokens .
+L20: 
+L21: * * *
+L22: ##
+L23: 
+L24: REST API Endpoint Limits
+L25: 
+L26: The following limits apply to the `https://mainnet.zklighter.elliot.ai/api/v1/` base URL, excluding `sendTx` and `sendTxBatch` where different limits, listed cite4†below , apply. Different limits, also listed cite6†below , apply to `https://explorer.elliot.ai/api/`. To bypass IP-based rate limits, clients can authenticate each request so that only L1-based rate limits apply.
+L27: Builder accounts  | Plus accounts  | Premium/Advanced accounts  | Standard accounts
+L28: --- | --- | --- | ---
+L29: 240,000 weighted requests per rolling minute  | 24,000 weighted requests per rolling minute  | 24,000 weighted requests per rolling minute  | 60 requests per rolling minute
+L30: ###
+L31: 
+L32: Weights:
+L33: 
+L34: Endpoint  | Weight
+L35: --- | ---
+L36: `sendTx, sendTxBatch, nextNonce`  | 6
+L37: `publicPools, txFromL1TxHash`  | 50
+L38: `accountInactiveOrders, accountActiveOrders, accountOrders, deposit/latest`  | 100
+L39: `exchangeMetrics`  | 120
+L40: `apikeys`  | 150
+L41: `transferFeeInfo`  | 500
+L42: `trades`  | 200
+L43: `recentTrades`  | 600
+L44: `changeAccountTier, tokens/*, setAccountMetadata, notification/ack, createIntentAddress, fastwithdraw, referral/*`  | 3000
+L45: `tokens/create`  | 23000
+L46: Other endpoints  | 300
+L47: While standard accounts rate limits are not weighted, whenever `{premium_weighted_requests}/{endpoint_weight} < {standard_requests}`, the former limit is going to be applied. For example, both Standard and Premium/Advanced accounts will be able to make a maximum of 8 requests per rolling minute to the `changeAccountTier` endpoint.
+L48: You can apply for a Builder Account through our Discord support channel. It’s free of charge, but we reserve the right to review applications and verify the intended use. Builder Accounts include higher limits for querying our read-only REST API endpoints, excluding `sendTx` and `sendTxBatch`; otherwise, standard account limits apply. Builders on this tier should authenticate every request, even when not explicitly required in our documentation.
+L49: 
+L50: * * *
+L51: ##
+L52: 
+L53: WebSocket Limits
+L54: 
+L55: To prevent resource exhaustion, we enforce the following usage limits per IP:
+L56:   * Connections: 255
+L57:   * Subscriptions per connection: 500
+L58:   * Subscriptions per IP: 5000
+L59:   * Unique Accounts per connection: 500
+L60:   * Unique Accounts per IP: 5000
+L61:   * Max Connections Per Minute: 255 (not to be confused with channel subscriptions)
+L62:   * Max Messages Sent By Client Per Minute: 200 (sendTx and sendBatchTx are not counted here, and follow the same limits as REST requests)
+L63:   * Max Inflight Messages: 50 (sendTx and sendBatchTx are not counted here)
+L64: Deployments with no downtime might drop your connection, so it's recommended to have proper reconnection logic, in addition to ping/pong logic.
+L65: 
+L66: * * *
+L67: ##
+L68: 
+L69: SendTx and SendTxBatch Limits (Premium/Advanced and Plus accounts)
+L70: The following limits apply to `sendTx` and `sendTxBatch` requests, regardless of whether you send the requests using REST via HTTP, or via WebSocket. For these two types, we do not enforce IP limits, but only check rate limits at the L1 address level. Standard accounts are still bound to the 60 requests per minute limit. For rate limit purposes, fee credits count as staked LIT.
+L71: For Premium/Advanced accounts, `sendTx` and `sendTxBatch` are the only two types constrained by cite7†Volume Quota , necessary to create and modify orders.
+L72: ###
+L73: 
+L74: Premium/Advanced Accounts
+L75: 
+L76: Staked LIT  | sendTx/sendTxBatch per minute
+L77: --- | ---
+L78: 0  | 4000
+L79: 1000  | 5000
+L80: 3000  | 6000
+L81: 10000  | 7000
+L82: 30000  | 8000
+L83: 100000  | 12000
+L84: 300000  | 24000
+L85: 500000  | 72000
+L86: 
+L87: ###
+L88: 
+L89: Plus Accounts
+L90: 
+L91: sendTx/sendTxBatch per minute
+L92: ---
+L93: 4000
+L94: 
+L95: * * *
+L96: 
+L97: ##
+L98: 
+L99: Explorer REST API Endpoint Limits
+L100: 
+L101: The following limits apply to the `https://explorer.elliot.ai/api/` Base URL.
+L102: 
+L103: All account types have the same limit of 90 weighted requests per rolling minute window.
+L104: ###
+L105: 
+L106: Weights
+L107: 
+L108: Endpoint  | Weight
+L109: --- | ---
+L110: `search`  | 3
+L111: `accounts/*`  | 2
+L112: Other endpoints  | 1
+L113: 
+L114: * * *
+L115: 
+L116: ##
+L117: 
+L118: Orders
+L119: ###
+L120: 
+L121: Pending Orders
+L122: 
+L123: Defined as orders with a `pending` status, sent to the server and acknowledged, but not yet included in the order book for matching. For example, take-profit, stop-loss, and TWAP orders (counted as one unit; sub-orders skip limits) fall into this category.
+L124: 
+L125:  | Per Account  | Per Market
+L126: --- | --- | ---
+L127: Standard  | 50  | 10
+L128: Plus  | 500  | 100
+L129: Premium/Advanced  | 1000  | 100
+L130: ###
+L131: 
+L132: Active Orders
+L133: 
+L134: Account Type  | Per Account  | Per Market
+L135: --- | --- | ---
+L136: Standard  | 250  | 30
+L137: Plus  | 750  | 250
+L138: Premium/Advanced  | 1500  | 1000
+L139: ##
+L140: 
+L141: Transaction Type Limits
+L142: 
+L143: The following limits apply to all account types, otherwise,`sendTx` limits apply:
+L144: Transaction Type  | Limit
+L145: --- | ---
+L146: Default  | 40 requests / minute
+L147: `L2Withdraw`  | 2 requests / minute, and 3 requests / 2 hours
+L148: `L2CreateSubAccount`  | 2 requests / minute
+L149: `L2CreatePublicPool`  | 2 requests / minute
+L150: `L2UpdateLeverage`  | 40 requests / minute
+L151: `L2ChangePubKey`  | 300 requests / minute
+L152: `L2Transfer`  | 120 request / minute
+L153: `L2MintShares`  | 1 request / 15 seconds
+L154: `L2UnstakeAssets`  | 1 request / 15 seconds
+L155: Fast Withdrawals  | 10 requests / hour
+L156: `L2Withdraw` limits are counted per L1 address, so all sub-accounts of the same owner share them.
+L157: 
+L158: `L1Withdraw` (calling `withdraw()` on the Lighter contract) is an L1 transaction and is not subject to API rate limits.
+L159: 
+L160: * * *
+L161: ##
+L162: 
+L163: Rate Limit Exceeding Behavior
+L164: 
+L165: If you exceed any rate limit:
+L166:   * You will receive `HTTP 429`, or `HTTP 405`
+L167:   * For WebSocket connections, excessive messages may result in disconnection
+L168:   * When you're rate-limited on REST, WebSocket connections also get rate-limited, and vice versa
+L169:   * For Premium/Advanced and Plus accounts, mainnet endpoints fall into a separate bucket from `sendTx` and `sendTxBatch`, meaning that getting rate-limited in one of the two buckets will not affect activity on the other. Put simply, sending too many transactions in a minute will not affect your ability to fetch data from the exchange, and vice versa.
+L170: To avoid this, please ensure your clients are implementing proper backoff and retry strategies.
+L171: ##
+L172: 
+L173: Cooldown
+L174: 
+L175: Depending on whether you have been rate-limited by our firewall, or by the api servers, the cooldown period varies:
+L176: 
+L177:   * Firewall: 60 seconds, static
+L178:   * Api servers: `weightOfEndpoint/(totalWeight/60)`
+L179: 
+L180: As an example, making a request to the `account` endpoint (which carries a `weight` of 300) after having exhausted your weighted requests in a given minute window, results in a 750ms cooldown period.
+L181: 
+L182: Updated 5 days ago
+L183: 
+L184: * * *
+L185: 
+L186: cite8†Data Structures, Constants and Errors cite9†Account Types L187: Did this page help you?
+L188: 
+L189: Yes
+L190: 
+L191: No
+L192: 
+L193: Copy Page
+L194:   *     * cite10†REST API Endpoint Limits L195:     *       * cite11†Weights: L196:     * cite12†WebSocket Limits L197:     * cite13†SendTx and SendTxBatch Limits (Premium/Advanced and Plus accounts) L198:     *       * cite14†Premium/Advanced Accounts L199:       * cite15†Plus Accounts L200:     * cite6†Explorer REST API Endpoint Limits L201:     *       * cite16†Weights L202:     * cite17†Orders L203:     *       * cite18†Pending Orders L204:       * cite19†Active Orders L205:     * cite20†Transaction Type Limits L206:     * cite21†Rate Limit Exceeding Behavior L207:     * cite22†Cooldown 

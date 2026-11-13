@@ -1,0 +1,244 @@
+Downloadable historical OHLCVT (Open, High, Low, Close, Volume, Trades) data | Kraken
+EN
+EN
+Buy crypto in minutes
+Get the Kraken app
+EN
+Ask AI
+All
+Filter by:
+Select Product
+How do I deposit cash into my account?
+I need help with account verification
+Why can't I access my account?
+Are there any crypto withdrawal fees?
+I need help signing into my account
+Support
+Trading
+API
+CSV Data
+Downloadable historical OHLCVT (Open, High, Low, Close, Volume, Trades) data
+Last updated:
+October 12, 2026
+OHLCVT data is the API equivalent to the candlesticks that are displayed on graphical charts (such as the
+Kraken Pro
+trading interface).
+OHLCVT stands for
+O
+pen,
+H
+igh,
+L
+ow,
+C
+lose,
+V
+olume and
+T
+rades and represents the following trading information within each time frame (such as one minute, five minute, hourly, daily, etc.):
+•
+Open
+- the first traded price
+•
+High
+- the highest traded price
+•
+Low
+- the lowest traded price
+•
+Close
+- the final traded price
+•
+Volume
+- the total volume traded by all trades
+•
+Trades
+- the number of individual trades
+We provide downloadable CSV (comma separated) files containing OHLCVT data for each of our currency pairs from the beginning of each market up to the present.
+Each ZIP file contains the relevant CSV files for 1, 5, 15, 30, 60, 240, 720 and 1440 minute intervals, which can be viewed in a text editor, used in code, converted into other formats (such as JSON, XML, etc.) or imported into a graphical charting application.
+Note that the OHLCVT data only includes entries for intervals when trades happened, so any missing candlesticks indicate that no trades occurred during those intervals. Charting software often provides an option to display/hide empty intervals, which could be used to replace the missing candlesticks if needed.
+OHLCVT data for several popular intervals can also be retrieved via our
+REST API OHLC endpoint
+, but there are some limitations (notably the amount of data that can be retrieved).
+Complete Data
+For clients that have not yet downloaded any historical OHLCVT data, the full history is available covering all available candlestick history for every currency pair — each pair from its first trade on Kraken through 30 June 2026.
+Because the complete dataset is large, it is split into ~2 GB parts. Download every part, join them into a single ZIP file, then unzip.
+1. Download all of the parts. These are direct file links — please don't click to open them in a browser (they will display as unreadable raw text). Right-click each link and choose "Save Link As…", or use the command line.
+https://assets.kraken.com/marketing/institutions/Kraken_OHLCVT_Full.zip.part00
+https://assets.kraken.com/marketing/institutions/Kraken_OHLCVT_Full.zip.part01
+https://assets.kraken.com/marketing/institutions/Kraken_OHLCVT_Full.zip.part02
+https://assets.kraken.com/marketing/institutions/Kraken_OHLCVT_Full.zip.part03
+https://assets.kraken.com/marketing/institutions/Kraken_OHLCVT_Full.zip.part04
+macOS / Linux:
+for i in 00 01 02 03 04; do curl -O "
+https://assets.kraken.com/marketing/institutions/Kraken_OHLCVT_Full.zip.part$i
+" done
+Windows (PowerShell):
+00..04  ForEach-Object { curl.exe -O "
+https://assets.kraken.com/marketing/institutions/Kraken_OHLCVT_Full.zip.part$('{0:D2}
+' -f $_)" }
+Optional — confirm each part downloaded cleanly against the published checksums:
+https://assets.kraken.com/marketing/institutions/OHLCVT_Full_PARTS_SHA256SUMS.txt
+2. Reassemble the parts into one ZIP file.
+macOS / Linux:
+cat Kraken_OHLCVT_
+Full.zip
+.part* > Kraken_OHLCVT_
+Full.zip
+Windows (Command Prompt):
+copy /b Kraken_OHLCVT_Full.zip.part00 + Kraken_OHLCVT_
+Full.zip
+.part01 + Kraken_OHLCVT_
+Full.zip
+.part02 + Kraken_OHLCVT_
+Full.zip
+.part03 + Kraken_OHLCVT_
+Full.zip
+.part04 Kraken_OHLCVT_
+Full.zip
+3. Optional — verify the reassembled file matches the published checksum:
+shasum -a 256 Kraken_OHLCVT_Full.zip # expected: bc273e9027470b07d790a7fa4df9bb43f0dfc527c20c6ecae48402e123e7b1c7
+4. Unzip the file and use the CSVs.
+Incremental Updates
+For clients that have already downloaded the historical OHLCVT data in the past, incremental updates are provided at the end of each quarter as single ZIP files (no reassembly required):
+Kraken_OHLCVT_
+2026Q1.zip
+—
+https://assets.kraken.com/marketing/institutions/Kraken_OHLCVT_2026Q1.zip
+Kraken_OHLCVT_
+2026Q2.zip
+—
+https://assets.kraken.com/marketing/institutions/Kraken_OHLCVT_2026Q2.zip
+Kraken_OHLCVT_
+2026Q3.zip
+—
+https://assets.kraken.com/marketing/institutions/Kraken_OHLCVT_2026Q3.zip
+About the data
+The download contains OHLCVT (Open, High, Low, Close, Volume, Trades) candlestick data at 1, 5, 15, 60, 240, 720 and 1440-minute intervals, with one set of CSV files per currency pair. Each row is: `timestamp, open, high, low, close, volume, trades`. OHLCVT files do not include a header row. Only intervals in which trades occurred are included (gaps are not zero-filled). Each archive also contains a `MANIFEST.json` describing the build. The same data is available programmatically via Kraken's public REST API.
+Complete Data
+Incremental Updates
+Create account
+Create account
+Sign in
+Create account
+Create account
+Sign in
+Features
+→
+Buy Crypto
+Sell Crypto
+Margin Trading
+Futures Trading
+OTC Trading
+Institutions
+API Trading
+Staking Rewards
+Recurring buys
+Kraken Borrow
+Kraken Funded
+About Kraken
+→
+Kraken Security
+Kraken Careers
+Kraken Blog
+Kraken Developer
+Press Room
+Affiliate Program
+Asset Listings
+Kraken Status
+Support Center
+Complaints
+Crypto Prices
+→
+Bitcoin Price
+Ethereum Price
+Dogecoin Price
+XRP Price
+Cardano Price
+Solana Price
+Litecoin Price
+Crypto categories
+Price predictions
+Convert Crypto
+→
+BTC to USD
+ETH to USD
+XRP to USD
+BNB to USD
+SOL to USD
+DOGE to USD
+ADA to USD
+TRX to USD
+LTC to USD
+Buy Crypto
+→
+Buy Bitcoin
+Buy Ethereum
+Buy Dogecoin
+Buy XRP
+Buy Cardano
+Buy Solana
+Buy Litecoin
+Buy Stocks
+→
+Buy Nvidia
+Buy Tesla
+Buy Apple
+Buy Amazon
+Buy Palantir
+Buy Microsoft
+Buy Tokenized Equities
+→
+Buy NVDAx
+Buy TSLAx
+Buy AAPLx
+Buy SPYx
+Buy AMZNx
+Financial Education
+→
+What is cryptocurrency?
+What are Smart Contracts?
+What is Bitcoin?
+What is tokenization
+Best Crypto apps
+Best crypto exchanges
+Kraken vs Coinbase
+Privacy Hub
+Privacy Notice
+Cookie Settings
+Do Not Sell/Share
+Compliance Hub
+Terms of Service
+Exchange Trading Rules
+Disclosures
+by
+PAYWARD
+© 2011–2026 Payward, Inc.
+Trading
+Kraken
+Kraken Pro
+NinjaTrader
+Breakout
+VIP
+API Trading
+|
+Services
+Payward Services
+xStocks
+CF Benchmarks
+Reap
+|
+Banking
+Krak
+Prime
+OTC
+Custody
+|
+Asset Management
+This page is for Kraken Global. Please visit
+blog.kraken.com/japan
+for information on services, documents and notices for customers residing in Japan.
+Important notice about crypto asset trading
+Crypto assets are not a national currency in or outside of Japan. Because the price of crypto assets can fluctuate, there is a possibility of loss. If the private keys are lost, you may completely lose access to the corresponding crypto assets and their value may be lost. Breakdowns in the blockchain transfer mechanism could cause crypto assets to lose their value. Crypto assets can be used to pay for goods only when the seller has consented to accepting crypto assets as consideration. When trading crypto assets, please understand the transaction details completely and proceed at your own discretion.
+Important notice about Staking service
+The Staking service is a loan transaction of crypto assets based on a crypto asset loan for consumption agreement. This does NOT mean that clients perform staking on their own. Crypto assets borrowed by us are not subject to segregation management since this activity does not fall under a Crypto Asset Exchange activity under the Payment Services Law. This service is not covered by deposit insurance. Reward rates  (Usage Fee on the  Loan for Consumption Agreement) reflect the annual percentage rate (APR). All reward rates are estimates subject to change. When using the Staking service, please understand the transaction details completely by reading “Terms and Conditions of Crypto Asset Loan for Consumption Agreement” and “Transaction Manual for Crypto Asset Loan for Consumption Agreement”, and proceed at your own discretion.

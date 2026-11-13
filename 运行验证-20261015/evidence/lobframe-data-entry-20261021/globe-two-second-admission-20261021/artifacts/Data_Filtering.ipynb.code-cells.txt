@@ -1,0 +1,60 @@
+CELL 0
+import keras
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+
+CELL 2
+df_snapshot = pd.read_parquet(r"Data\coinbase_btc_usd\coinbase\btc_usd\l2_snapshots\100ms\coinbase_btc_usd_l2_book_snapshots_depth50_2019_11_12_0000_0100.parquet")
+df_ticker = pd.read_parquet(r'Data\coinbase_btc_usd\coinbase\btc_usd\ticker\coinbase_btc_usd_ticker_2019_11_12.parquet')
+df_trades = pd.read_parquet(r'Data\coinbase_btc_usd\coinbase\btc_usd\trades\coinbase_btc_usd_trades_2019_11_12.parquet')
+
+CELL 3
+df_snapshot.head()
+
+CELL 7
+i = 0
+for filename in os.listdir(r"Data\coinbase_btc_usd\coinbase\btc_usd\l2_snapshots\100ms"):
+    print(filename)
+    
+    df_snapshot = pd.read_parquet(os.path.join(r"Data\coinbase_btc_usd\coinbase\btc_usd\l2_snapshots\100ms", filename))
+    
+    df_snapshot.dropna(inplace=True) #Drop na values
+    print('Non na entries:', np.shape(df_snapshot)[0])
+
+    # Check no price levels with zero quantities:
+    assert np.count_nonzero(df_snapshot.values) == np.shape(df_snapshot)[0] * np.shape(df_snapshot)[1]
+
+    df_snapshot['future_bid'] = df_snapshot['b1'].shift(-1)
+
+    # Calculate how many levels the bid/ask price changed by
+    df_snapshot['bid_change_n'] = df_snapshot.apply(lambda x: 100*(x['future_bid'] - x['b1']), axis=1)
+
+    #Delete last one as don't know how much it has changed by
+    df_snapshot.drop(df_snapshot.index[-1], axis=0, inplace=True)
+
+    # Ignore the prices columns
+    df_snapshot_cut = df_snapshot[df_snapshot.columns[100:]]
+
+    # Take only the values where the bid price increases
+    df_bid_up = df_snapshot_cut[df_snapshot_cut['bid_change_n'] > 0].drop(['future_bid'], axis=1)
+
+    # How many entries in this hour left?
+    print('Entries left:', np.shape(df_bid_up)[0])
+    
+    if i==0:
+        df = df_bid_up
+        i += 1
+    else:
+        df = df.append(df_bid_up)
+
+
+CELL 8
+df.to_csv("df_snapshot_100ms_bid_up.csv")
+
+CELL 9
+value_counts = np.unique(np.round(df_bid_up['bid_change_n'].values).astype(int), return_counts=True)
+value_counts
+
+CELL 10

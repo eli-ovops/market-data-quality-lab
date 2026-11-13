@@ -1,0 +1,135 @@
+ (https://docs.tardis.dev/historical-data-details.md)
+citeturn1551view0 [wordlim: 200] Crawled: today; Content type: text/plain; Source: open({"ref_id":"https://docs.tardis.dev/historical-data-details.md","lineno":null}); Total lines: 132
+L0: > For the complete documentation index, see [llms.txt](https://docs.tardis.dev/llms.txt). Markdown versions of documentation pages are available by appending `.md` to page URLs; this page is available as [Markdown](https://docs.tardis.dev/historical-data-details.md).
+L1: # Historical Data Details
+L2: 
+L3: Historical market data details for each supported exchange — available symbols, channels, date ranges...
+L4: {% hint style="info" %}
+L5: Historical data details describes data collection specifics for each supported exchange and what's available via Tardis.dev [HTTP API](/api/http-api-reference.md). If you'd like to work with [normalized market data](/faq/data.md#what-is-a-difference-between-exchange-native-and-normalized-data-format) see [official libraries](/api/quickstart.md) and [downloadable CSV files](/downloadable-csv-files/overview.md).
+L6: {% endhint %}
+L7: 
+L8: You'll find here per-exchange details about:
+L9: * historical data availability date ranges — since when the historical data has been collected and is available
+L10: * captured real-time market data channels also described as streams, subscription topics, tables etc in exchanges' docs — available historical raw market data is being sourced from WebSocket real-time APIs provided by the exchanges and can be filtered by channels, e.g.: to get historical trades for BitMEX, channel `trade` needs to be provided alongside requested instruments symbols (via [HTTP API](/api/http-api-reference.md#data-feeds-exchange) or [client libs](/api/quickstart.md) function args).
+L11: * symbols of recorded instruments/currency pairs
+L12: * incidents - known Tardis.dev market data collection issues where data may be missing or affected for a given exchange
+L13: Some exchanges encode requested symbol in channel name, e.g.: Deribit `trades.BTC-PERPETUAL.100ms` channel. This is not the case with our API as we always consider channel name and symbol to be separate inputs. In case of Deribit example channel name would be `trades` and symbol `BTC-PERPETUAL`. If channel provides option of frequency of updates (e.g.: 100ms vs raw tick by tick) always higher frequency one is being chosen and recorded.
+L14: {% hint style="info" %}
+L15: [What is the channel field used in the HTTP API and client libs replay functions?](/faq/data.md#what-is-the-channel-field-used-in-the-http-api-and-client-libs-replay-functions)
+L16: {% endhint %}
+L17: ## Market data collection overview
+L18: * All market data collection is being performed on one of the highly available [Google Cloud Platform Kubernetes Clusters](https://cloud.google.com/kubernetes-engine/) - London, UK (europe-west2 region) or Tokyo, Japan (asia-northeast1 region) - information which data center location is used for particular exchange is described on exchange historical data details page.
+L19: * When exchange provides choice of real-time data frequency for specific data types (e.g. order book data ) always most granular, non aggregated data feed is being collected.
+L20: * Choice if single or multiple WebSocket connections are being used to record full real-time data feed is made on case by case basis - we take into account exchange API limits and latency which may be higher or lower if single connection is being used - detailed information which strategy is used for particular exchange is described on exchange historical data details page.
+L21: * WebSocket connection is dynamically re-subscribed (or restarted for some exchanges) at 00:00 UTC every day in order to receive [initial order book snapshots](#collected-order-book-data-details).
+L22: * Each received message is timestamped with 100ns precision using [synchronized clock](https://developers.google.com/time) at arrival time and stored in ISO 8601 format.
+L23: * Messages provided by exchanges' WebSocket feeds are being stored without any modifications.
+L24: * Checks for new instruments available on a given exchange are performed every minute.
+L25: * Market data collection services are being constantly monitored both manually and via automated tools (monitoring, alert notifications) and have built-in self-healing capabilities. We also constantly monitor for upcoming exchanges' API changes and adapt to those beforehand.
+L26: * There are multiple built-in checks that detect whether a connection to an exchange is healthy during the data collection process, such as:
+L27:   * validating subscription responses - if an exchange does not confirm subscriptions within 20 seconds, the connection is restarted
+L28:   * [Heartbeat pings](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers#Pings_and_Pongs_The_Heartbeat_of_WebSockets)
+L29:   * order book sequence number validation for exchanges that provide those
+L30:   * validating JSON format as in some unusual circumstances exchanges return data that is invalid JSON
+L31:   * stale connection detection - if there are no responses received within a certain period (adjusted per exchange), it's most likely a stale connection that is automatically restarted
+L32:   * detection of an unusually low message count from an exchange in a given time period, which likely means the connection is not healthy, e.g. receiving only 'pings' without data messages
+L33:   * and many more
+L34: * Any incident that is caused by us (bugs, network errors etc.) is being logged and available [via API](/api/http-api-reference.md#exchanges-exchange).
+L35: * New market data delay is 6 minutes in relation to real-time (`T - 6min`).
+L36: ## Collected order book data details
+L37: Historical market data available via [HTTP API](/api/http-api-reference.md#data-feeds-exchange) provides order book snapshots at the beginning of each day (00:00 UTC) and every time a WebSocket connection has been closed while recording real-time data feeds (the connection is restarted and a new snapshot is provided via a fresh connection). This means that to be sure to receive initial order book snapshots, one must replay historical data from 00:00 UTC of that day.
+L38: It also means there is a tiny **gap in historical data** (around `300-3000ms`, depending on the exchange) during re-subscription to real-time WebSocket feeds (every 24 hours) to receive order book snapshots.
+L39: Some exchanges do not provide initial order book snapshots when subscribing to WebSocket real-time feeds (like Binance, Bitstamp or Coinbase Exchange full order book), hence for those there is a 'generated' snapshot available instead (based on REST API call) - details are specific for each exchange and are described in per-exchange historical details pages.
+L40: ## Per-exchange historical data details
+L41: 
+L42: {% hint style="info" %}
+L43: Click any exchange below to see its historical data details - available instruments, captured [real-time channels](/faq/data.md#what-is-the-channel-field-used-in-the-http-api-and-client-libs-replay-functions), API access details and market data collection specifics.
+L44: {% endhint %}
+L45: * [Binance USDS-M Futures](/historical-data-details/binance-futures.md)
+L46: * [Binance COIN Futures](/historical-data-details/binance-delivery.md)
+L47: * [Binance European Options](/historical-data-details/binance-european-options.md)
+L48: * [Binance Spot](/historical-data-details/binance.md)
+L49: * [Binance US](/historical-data-details/binance-us.md)
+L50: * [OKX Futures](/historical-data-details/okex-futures.md)
+L51: * [OKX Swap](/historical-data-details/okex-swap.md)
+L52: * [OKX Options](/historical-data-details/okex-options.md)
+L53: * [OKX Spot](/historical-data-details/okex.md)
+L54: * [OKX Nitro Spreads](/historical-data-details/okex-spreads.md)
+L55: * [Coinbase Exchange](/historical-data-details/coinbase.md)
+L56: * [Coinbase Derivatives](/historical-data-details/coinbase-derivatives.md)
+L57: * [Deribit](/historical-data-details/deribit.md)
+L58: * [Bybit Derivatives](/historical-data-details/bybit.md)
+L59: * [Bybit Spot](/historical-data-details/bybit-spot.md)
+L60: * [Bybit Options](/historical-data-details/bybit-options.md)
+L61: * [Bybit Spread](/historical-data-details/bybit-spread.md)
+L62: * [Kraken Futures](/historical-data-details/cryptofacilities.md)
+L63: * [Kraken](/historical-data-details/kraken.md)
+L64: * [Bitfinex Derivatives](/historical-data-details/bitfinex-derivatives.md)
+L65: * [Bitfinex](/historical-data-details/bitfinex.md)
+L66: * [KuCoin Futures](/historical-data-details/kucoin-futures.md)
+L67: * [KuCoin Spot](/historical-data-details/kucoin.md)
+L68: * [Aster Futures](/historical-data-details/aster-futures.md)
+L69: * [Aster Spot](/historical-data-details/aster.md)
+L70: * [MEXC Spot](/historical-data-details/mexc.md)
+L71: * [MEXC Futures](/historical-data-details/mexc-futures.md)
+L72: * [Crypto.com](/historical-data-details/crypto-com.md)
+L73: * [Bitstamp](/historical-data-details/bitstamp.md)
+L74: * [Bitvavo](/historical-data-details/bitvavo.md)
+L75: * [Bitget Futures](/historical-data-details/bitget-futures.md)
+L76: * [Bitget Spot](/historical-data-details/bitget.md)
+L77: * [Gate.io Futures](/historical-data-details/gate-io-futures.md)
+L78: * [Gate.io](/historical-data-details/gate-io.md)
+L79: * [HTX Coin-M Futures](/historical-data-details/huobi-dm.md)
+L80: * [HTX Coin-M Perpetual](/historical-data-details/huobi-dm-swap.md)
+L81: * [HTX USDT-M Contracts](/historical-data-details/huobi-dm-linear-swap.md)
+L82: * [HTX Spot](/historical-data-details/huobi.md)
+L83: * [Gemini](/historical-data-details/gemini.md)
+L84: * [WOO X](/historical-data-details/woo-x.md)
+L85: * [Upbit](/historical-data-details/upbit.md)
+L86: * [Bithumb](/historical-data-details/bithumb.md)
+L87: * [Phemex](/historical-data-details/phemex.md)
+L88: * [Delta Exchange](/historical-data-details/delta.md)
+L89: * [Blockchain.com](/historical-data-details/blockchain-com.md)
+L90: * [Bitnomial](/historical-data-details/bitnomial.md)
+L91: * [bitFlyer](/historical-data-details/bitflyer.md)
+L92: * [HitBTC](/historical-data-details/hitbtc.md)
+L93: * [Poloniex](/historical-data-details/poloniex.md)
+L94: * [Hyperliquid](/historical-data-details/hyperliquid.md)
+L95: * [Lighter](/historical-data-details/lighter.md)
+L96: * [Lighter RH](/historical-data-details/lighter-rh.md)
+L97: * [Polymarket](/historical-data-details/polymarket.md)
+L98: * [Bullish](/historical-data-details/bullish.md)
+L99: * [dYdX v4](/historical-data-details/dydx-v4.md)
+L100: ### Delisted exchanges
+L101: * [Coinbase International](/historical-data-details/coinbase-international.md)
+L102: * [BitMEX](/historical-data-details/bitmex.md)
+L103: * [FTX](/historical-data-details/ftx.md)
+L104: * [FTX US](/historical-data-details/ftx-us.md)
+L105: * [OKCoin](/historical-data-details/okcoin.md)
+L106: * [AscendEX (BitMax)](/historical-data-details/ascendex.md)
+L107: * [CoinFLEX](/historical-data-details/coinflex.md)
+L108: * [Binance Jersey](/historical-data-details/binance-jersey.md)
+L109: * [Binance DEX](/historical-data-details/binance-dex.md)
+L110: * [HTX Options](/historical-data-details/huobi-dm-options.md)
+L111: * [dYdX](/historical-data-details/dydx.md)
+L112: * [Serum DEX](/historical-data-details/serum.md)
+L113: * [Mango Markets DEX](/historical-data-details/mango.md)
+L114: * [Star Atlas DEX](/historical-data-details/star-atlas.md)
+L115: 
+L116: ---
+L117: # Agent Instructions
+L118: This documentation is published with GitBook. GitBook is the documentation platform designed so that both humans and AI agents can read, navigate, and reason over technical content effectively. Learn more at gitbook.com.
+L119: ## Querying This Documentation
+L120: If you need additional information that is not directly available in this page, you can query the documentation by asking a question.
+L121: 
+L122: Perform an HTTP GET request on the following URL with the `ask` and `goal` query parameters:
+L123: 
+L124: ```
+L125: GET https://docs.tardis.dev/historical-data-details.md?ask=<question>&goal=<user_goal>
+L126: ```
+L127: `ask` is the immediate question: it should be specific, self-contained, and written in natural language.
+L128: `goal` is what the user is ultimately trying to achieve, the reason they need the answer. Sharing it helps GitBook give you a better, more relevant answer. A goal is most helpful when it describes the outcome the user wants rather than restating the question. For example, with `ask=how do I create an API token`, a goal like `automate deployments from our CI pipeline` lets GitBook tailor the answer to that use case.
+L129: The response will contain a direct answer to the question and relevant excerpts and sources from the documentation.
+L130: 
+L131: Use this mechanism when the answer is not explicitly present in the current page, you need clarification or additional context, or you want to retrieve related documentation sections.
+

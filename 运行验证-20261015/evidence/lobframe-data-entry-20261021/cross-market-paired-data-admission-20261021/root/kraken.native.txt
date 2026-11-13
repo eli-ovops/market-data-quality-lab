@@ -1,0 +1,161 @@
+ (https://docs.tardis.dev/historical-data-details/kraken)
+citeturn1546view0 [wordlim: 200] Crawled: today; Content type: text/plain; Source: open({"ref_id":"https://docs.tardis.dev/historical-data-details/kraken","lineno":null}); Total lines: 158
+L0: > For the complete documentation index, see [llms.txt](https://docs.tardis.dev/llms.txt). Markdown versions of documentation pages are available by appending `.md` to page URLs; this page is available as [Markdown](https://docs.tardis.dev/historical-data-details/kraken.md).
+L1: # Kraken
+L2: 
+L3: Kraken historical market data details - currency pairs, data coverage and data collection specifics
+L4: 
+L5: Kraken historical data for **all its currency pairs** is available since **2019-06-04**.
+L6: 
+L7: {% embed url="<https://api.tardis.dev/v1/exchanges/kraken>" %}
+L8: See Kraken historical data coverage: available symbols, channels, date ranges and incidents
+L9: {% endembed %}
+L10: ### Symbol changes
+L11: 
+L12: Kraken WebSocket v2 uses `BTC` and `DOGE` in exchange-native symbol IDs. WebSocket v1 used `XBT` and `XDG`. Use v1 symbols before **2026-07-10** and v2 symbols from that date onward. This applies to both base and quote currencies, for example:
+L13: 
+L14: * `XBT/USD` → `BTC/USD`
+L15: * `XDG/USD` → `DOGE/USD`
+L16: * `ETH/XBT` → `ETH/BTC`
+L17: 
+L18: To resolve symbol IDs programmatically, query the [Instruments Metadata API](/api/instruments-metadata-api.md) using normalized `baseCurrency` and `quoteCurrency` values:
+L19: ```json
+L20: {
+L21:   "baseCurrency": "BTC",
+L22:   "quoteCurrency": "USD",
+L23:   "type": "spot"
+L24: }
+L25: ```
+L26: 
+L27: The response includes both exchange-native symbol IDs:
+L28: 
+L29: | id        | active  | availableSince             | availableTo                |
+L30: | --------- | ------- | -------------------------- | -------------------------- |
+L31: | `XBT/USD` | `false` | `2019-06-04T00:00:00.000Z` | `2026-07-10T00:00:00.000Z` |
+L32: | `BTC/USD` | `true`  | `2026-07-10T00:00:00.000Z` |                            |
+L33: ### Downloadable **CSV** files
+L34: 
+L35: Historical CSV datasets for the first day of each month are **available to download without API key**. See [downloadable CSV files documentation](/downloadable-csv-files/overview.md).
+L36: | data type             | symbol  | date       |                                                                                                        |
+L37: | --------------------- | ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
+L38: | incremental\_book\_L2 | XBT-USD | 2019-07-01 | [Download sample](https://datasets.tardis.dev/v1/kraken/incremental_book_L2/2019/07/01/XBT-USD.csv.gz) |
+L39: | trades                | XBT-USD | 2019-07-01 | [Download sample](https://datasets.tardis.dev/v1/kraken/trades/2019/07/01/XBT-USD.csv.gz)              |
+L40: | quotes                | XBT-USD | 2019-07-01 | [Download sample](https://datasets.tardis.dev/v1/kraken/quotes/2019/07/01/XBT-USD.csv.gz)              |
+L41: ### API Access and data format
+L42: 
+L43: Historical data format is the same as provided by real-time Kraken WebSocket **v2** API from **2026-07-10** onward, with addition of local timestamps. Data before **2026-07-10** uses Kraken WebSocket **v1** format. If you'd like to work with **normalized data format** instead (same format for each exchange) see [downloadable CSV files](/downloadable-csv-files/overview.md) or official [client libs](/api/quickstart.md) that can perform data normalization client-side.
+L44: {% tabs %}
+L45: {% tab title="Python" %}
+L46: 
+L47: ```python
+L48: # pip install tardis-dev
+L49: import asyncio
+L50: from tardis_dev import Channel, replay
+L51: 
+L52: async def main():
+L53:     async for local_timestamp, message in replay(
+L54:         exchange="kraken",
+L55:         from_date="2026-08-01",
+L56:         to_date="2026-08-02",
+L57:         filters=[Channel(name="book", symbols=["BTC/USD"])],
+L58:         api_key="YOUR_API_KEY",
+L59:     ):
+L60:         # messages as provided by Kraken real-time stream
+L61:         print(message)
+L62: 
+L63: asyncio.run(main())
+L64: ```
+L65: See [Python client docs](/python-client/quickstart.md).
+L66: {% endtab %}
+L67: 
+L68: {% tab title="Node.js" %}
+L69: 
+L70: ```javascript
+L71: // npm install tardis-dev
+L72: import { replay } from 'tardis-dev';
+L73: 
+L74: const messages = replay({
+L75:   exchange: 'kraken',
+L76:   from: '2026-08-01',
+L77:   to: '2026-08-02',
+L78:   filters: [{ channel: 'book', symbols: ['BTC/USD'] }],
+L79:   apiKey: 'YOUR_API_KEY'
+L80: });
+L81: 
+L82: // messages as provided by Kraken real-time stream
+L83: for await (const { localTimestamp, message } of messages) {
+L84:   console.log(localTimestamp, message);
+L85: }
+L86: ```
+L87: See [Node.js client docs](/node-client/quickstart.md).
+L88: {% endtab %}
+L89: 
+L90: {% tab title="cURL & HTTP API" %}
+L91: 
+L92: ```bash
+L93: curl --compressed -g 'https://api.tardis.dev/v1/data-feeds/kraken?from=2026-08-01&filters=[{"channel":"book","symbols":["BTC/USD"]}]&offset=0'
+L94: ```
+L95: 
+L96: {% embed url="<https://api.tardis.dev/v1/data-feeds/kraken?from=2026-08-01&filters=[{%22channel%22:%22book%22,%22symbols%22:[%22BTC/USD%22]}]&offset=0>" %}
+L97: Example API response for Kraken historical market data request
+L98: {% endembed %}
+L99: See [HTTP API docs](/api/http-api-reference.md).
+L100: {% endtab %}
+L101: 
+L102: {% tab title="cURL & tardis-machine" %}
+L103: 
+L104: ```bash
+L105: curl -g 'localhost:8000/replay?options={"exchange":"kraken","filters":[{"channel":"book","symbols":["BTC/USD"]}],"from":"2026-08-01","to":"2026-08-02"}'
+L106: ```
+L107: [Tardis-machine](/tardis-machine/quickstart.md) is a locally runnable server that exposes API allowing efficiently requesting historical market data for whole time periods in contrast to [HTTP API](/api/http-api-reference.md) that provides data only in minute by minute slices.
+L108: 
+L109: See [tardis-machine](/tardis-machine/quickstart.md) docs.
+L110: {% endtab %}
+L111: {% endtabs %}
+L112: ### Captured real-time channels
+L113: 
+L114: {% embed url="<https://docs.kraken.com/exchange/api-reference/spot-websocket>" %}
+L115: See Kraken WebSocket API docs providing documentation for each captured channel's format
+L116: {% endembed %}
+L117: 
+L118: {% hint style="info" %}
+L119: Click any channel below to see [HTTP API](/api/http-api-reference.md#data-feeds-exchange) response with historical data recorded for it.
+L120: {% endhint %}
+L121: 
+L122: **Current channels (API v2, since 2026-07-10):**
+L123: * [trade](https://api.tardis.dev/v1/data-feeds/kraken?from=2026-08-01\&filters=\[{%22channel%22:%22trade%22}]) Public trade executions stream
+L124: * [book](https://api.tardis.dev/v1/data-feeds/kraken?from=2026-08-01\&filters=\[{%22channel%22:%22book%22,%22symbols%22:\[%22BTC/USD%22]}]) Level 2 order book snapshots and updates with `depth=1000`
+L125: * [ticker](https://api.tardis.dev/v1/data-feeds/kraken?from=2026-08-01\&filters=\[{%22channel%22:%22ticker%22}]) Level 1 market data and 24h statistics, published when the best bid or offer changes (`event_trigger=bbo`)
+L126: * [instrument](https://api.tardis.dev/v1/data-feeds/kraken?from=2026-08-01\&filters=\[{%22channel%22:%22instrument%22}]) Reference data snapshots and updates for all active assets and tradeable pairs, including tokenized assets
+L127: **Legacy channels (API v1, until 2026-07-10):**
+L128: * [trade](https://api.tardis.dev/v1/data-feeds/kraken?from=2024-01-01\&filters=\[{%22channel%22:%22trade%22}]) Public trade executions stream
+L129: * [book](https://api.tardis.dev/v1/data-feeds/kraken?from=2024-01-01\&filters=\[{%22channel%22:%22book%22,%22symbols%22:\[%22XBT/USD%22]}]) Order book snapshots and deltas recorded with depth=1000
+L130: * [spread](https://api.tardis.dev/v1/data-feeds/kraken?from=2024-01-01\&filters=\[{%22channel%22:%22spread%22,%22symbols%22:\[%22XBT/USD%22]}]) Best bid and ask spread updates stream
+L131: * [ticker](https://api.tardis.dev/v1/data-feeds/kraken?from=2024-01-01\&filters=\[{%22channel%22:%22ticker%22}]) Ticker updates with best bid and ask plus 24h stats
+L132: ### Market data collection details
+L133: 
+L134: [Market data collection infrastructure](/faq/general.md#what-is-your-infrastructure-setup) for Kraken is located in GCP europe-west2 region (London, UK).
+L135: 
+L136: Real-time market data is captured via **multiple WebSocket connections** to `wss://ws.kraken.com/v2`. Before **2026-07-10**, data was captured from Kraken WebSocket v1 at `wss://ws.kraken.com`.
+L137: {% hint style="info" %}
+L138: Kraken servers are located in Equinix data center (London, UK) since **2025-11-01**. Before that they were located in AWS eu-west-1 region (Dublin, Ireland) from **2024-01-20**, and initially in AWS us-west-2 region (Oregon, USA).
+L139: {% endhint %}
+L140: 
+L141: 
+L142: ---
+L143: # Agent Instructions
+L144: This documentation is published with GitBook. GitBook is the documentation platform designed so that both humans and AI agents can read, navigate, and reason over technical content effectively. Learn more at gitbook.com.
+L145: ## Querying This Documentation
+L146: If you need additional information that is not directly available in this page, you can query the documentation by asking a question.
+L147: 
+L148: Perform an HTTP GET request on the following URL with the `ask` and `goal` query parameters:
+L149: 
+L150: ```
+L151: GET https://docs.tardis.dev/historical-data-details/kraken.md?ask=<question>&goal=<user_goal>
+L152: ```
+L153: `ask` is the immediate question: it should be specific, self-contained, and written in natural language.
+L154: `goal` is what the user is ultimately trying to achieve, the reason they need the answer. Sharing it helps GitBook give you a better, more relevant answer. A goal is most helpful when it describes the outcome the user wants rather than restating the question. For example, with `ask=how do I create an API token`, a goal like `automate deployments from our CI pipeline` lets GitBook tailor the answer to that use case.
+L155: The response will contain a direct answer to the question and relevant excerpts and sources from the documentation.
+L156: 
+L157: Use this mechanism when the answer is not explicitly present in the current page, you need clarification or additional context, or you want to retrieve related documentation sections.
+
